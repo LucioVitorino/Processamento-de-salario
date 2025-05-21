@@ -5,6 +5,7 @@
 package isptec.pii_pt2.grupo1;
 
 import static isptec.pii_pt2.grupo1.Address.create_new_address;
+import static isptec.pii_pt2.grupo1.Function.select_function;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -32,6 +33,7 @@ public class Collaborator {
         start_data.getTime();
         
         System.out.print("Digite o seu email: ");
+        //Validar email
         String email_ = validate_email(input_colab.next());
         novo.email.append(email_);
         
