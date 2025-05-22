@@ -20,7 +20,7 @@ public class Function {
     double bonus;
     int id;
     int colab_assigned;
-    
+
     public static void create_function(String name, double salary, double bonus)
     {
         Function function = new Function();
@@ -112,7 +112,11 @@ public class Function {
             }while(input.hasNextInt() == false );
             choose = input.nextInt();
         }
-        //verificar se nao tem colaboradores com essa função
+        if(functions_list.get(choose).colab_assigned > 0)
+        {
+            System.out.println("Essa função não pode ser removida, pois existem colaboradores associados a ela");
+            return;
+        }
         functions_list.remove(choose);
         System.out.println("Função removida com sucesso!");
     }
