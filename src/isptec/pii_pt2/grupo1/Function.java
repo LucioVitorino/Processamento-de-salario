@@ -28,8 +28,20 @@ public class Function {
             }
             System.out.println("Escolha uma funçao: ");
             //Validar se o número digitado é válido
-             
+             do{
+                if (input.hasNextInt() == false)
+                {
+                    System.out.println("Digite um número válido");
+                    input.next();
+                }
+            }while(input.hasNextInt() == false );
             int choose = input.nextInt();
+            while (choose < 0 || choose >= functions_list.size())
+            {
+                System.out.println("Digite um número válido");
+                choose = input.nextInt();
+            }
+            System.out.println("Você escolheu a função: " + functions_list.get(choose).name);
             return functions_list.get(choose);
         }
 }
