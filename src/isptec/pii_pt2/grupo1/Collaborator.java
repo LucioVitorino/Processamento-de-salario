@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Collaborator {
     int number;
     StringBuilder name = new StringBuilder();
-    Date birthday = new Date();
+    localDate birthday = new Date();
     Address household = new Address();
     Function function = new Function();
     StringBuilder email = new StringBuilder();
