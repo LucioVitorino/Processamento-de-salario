@@ -20,7 +20,7 @@ public class Function {
     double bonus;
     int id;
     int colab_assigned;
-
+    
     public static void create_function(String name, double salary, double bonus)
     {
         Function function = new Function();
@@ -42,7 +42,6 @@ public class Function {
         double bonus = input.nextDouble();
         create_function(name, salary, bonus);
         System.out.println("Função criada com sucesso!");
-
     }
     public static Function select_function()
         {
@@ -75,6 +74,7 @@ public class Function {
                 choose = input.nextInt();
             }
             System.out.println("Você escolheu a função: " + functions_list.get(choose).name);
+            functions_list.get(choose).colab_assigned++;
             return functions_list.get(choose);
         }
 
