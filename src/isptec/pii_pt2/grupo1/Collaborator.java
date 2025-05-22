@@ -6,6 +6,9 @@ package isptec.pii_pt2.grupo1;
 
 import static isptec.pii_pt2.grupo1.Address.create_new_address;
 import static isptec.pii_pt2.grupo1.Function.select_function;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -16,7 +19,7 @@ import java.util.Scanner;
 public class Collaborator {
     int number;
     StringBuilder name = new StringBuilder();
-    localDate birthday = new Date();
+    LocalDate birthday;
     Address household = new Address();
     Function function = new Function();
     StringBuilder email = new StringBuilder();
@@ -51,16 +54,21 @@ public class Collaborator {
         return email;
     }
 
-    private Date create_birthday() {
-        Date new_birth =  new Date();
-        System.out.println("Digite a da de nascimento:  ");
-        System.out.print("Dia: ");
-        new_birth.setDate(input_colab.nextInt());
-        System.out.print("Mes: ");
-        new_birth.setMonth(input_colab.nextInt());
-        System.out.print("Ano: ");
-        new_birth.setYear(input_colab.nextInt());
-        System.out.println();
-        return new_birth;
+    public static LocalDate create_birthday() {
+         Scanner input_date = new Scanner(System.in);
+         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+         String data = new String();
+         LocalDate date = LocalDate.now();
+         
+        try{
+            
+        System.out.print("Data de nascimento (dd/MM/yyyy) : ");
+        data = input_date.next();
+        date = LocalDate.parse(data, formato);
+        
+        }catch(DateTimeParseException e){
+            System.out.print("Erro de fomatação de data !");
+        }
+        return (date);
     }
 }
