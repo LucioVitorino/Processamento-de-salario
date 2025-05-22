@@ -4,13 +4,9 @@
  */
 package isptec.pii_pt2.grupo1;
 
-import static isptec.pii_pt2.grupo1.Collaborator.create_birthday;
 import static isptec.pii_pt2.grupo1.Collaborator.print_collaborator;
 import static isptec.pii_pt2.grupo1.Function.new_function;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
-
 /**
  *
  * @author lucio

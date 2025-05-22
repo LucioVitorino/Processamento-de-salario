@@ -10,9 +10,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.regex.Pattern;
+import static isptec.pii_pt2.grupo1.Utils.add_name;
+import static isptec.pii_pt2.grupo1.Utils.input;
+import static isptec.pii_pt2.grupo1.Utils.validate_email;
 
 /**
  *
@@ -27,20 +27,18 @@ public class Collaborator {
     StringBuilder email = new StringBuilder();
     LocalDate start_data;
     boolean is_active = true;
-    Scanner input_colab =  new Scanner(System.in);
-    
+
     public  void register_collaborator(ArrayList<Collaborator> list)
     {
         Collaborator novo = new Collaborator();
         System.out.println("------------Dados Pessoais-----------");
         System.out.print("Digite o nome: ");
-        novo.name.append(input_colab.next());
+        novo.name.append(add_name());
         novo.birthday = create_birthday();
         StringBuilder email_ = new StringBuilder();
         do{
         System.out.print("Digite o seu email: ");
-        //Validar email
-        email_.append(input_colab.next());
+        email_.append(input.next());
         }while(!validate_email(email_, list));
         
         novo.email.append(email_);
@@ -54,21 +52,8 @@ public class Collaborator {
         list.add(novo);
     }
     
-    public boolean validate_email(StringBuilder email, ArrayList<Collaborator> list)
-    {
-        //Validar....
-        for(Collaborator item: list)
-        {
-            if(email.toString().equals(item.email.toString()))
-                return (false);
-        }
-        String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-        return Pattern.matches(regex, email);
-    }
-
     public static LocalDate create_birthday() 
     {
-         Scanner input_date = new Scanner(System.in);
          DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
          String data = new String();
          LocalDate date = LocalDate.now();
@@ -76,7 +61,7 @@ public class Collaborator {
         try{
             
         System.out.print("Data de nascimento (dd/MM/yyyy) : ");
-        data = input_date.next();
+        data = input.next();
         date = LocalDate.parse(data, formato);
         
         }catch(DateTimeParseException e)
