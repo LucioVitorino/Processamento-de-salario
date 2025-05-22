@@ -26,6 +26,9 @@ public class Function {
             {
                 System.out.println(i + " - " + functions_list.get(i).name);
             }
+            System.out.println("Escolha uma funçao: ");
+            //Validar se o número digitado é válido
+             
             int choose = input.nextInt();
             return functions_list.get(choose);
         }
