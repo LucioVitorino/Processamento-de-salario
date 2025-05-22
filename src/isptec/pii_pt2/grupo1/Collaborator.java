@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -33,9 +34,13 @@ public class Collaborator {
         System.out.print("Digite o nome: ");
         novo.name.append(input_colab.next());
         novo.birthday = create_birthday();
+        String email_ = new String();
+        do{
         System.out.print("Digite o seu email: ");
         //Validar email
-        String email_ = validate_email(input_colab.next());
+        email_ = input_colab.next();
+        }while(!validate_email(email_));
+        
         novo.email.append(email_);
         
         System.out.println();
@@ -47,10 +52,11 @@ public class Collaborator {
         return novo;
     }
     
-    public String validate_email(String email)
+    public boolean validate_email(String email)
     {
         //Validar....
-        return email;
+        String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        return Pattern.matches(regex, email);
     }
 
     public static LocalDate create_birthday() {
