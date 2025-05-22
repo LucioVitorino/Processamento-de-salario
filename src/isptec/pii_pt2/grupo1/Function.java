@@ -42,7 +42,6 @@ public class Function {
         double bonus = input.nextDouble();
         create_function(name, salary, bonus);
         System.out.println("Função criada com sucesso!");
-
     }
     public static Function select_function()
         {
@@ -75,6 +74,7 @@ public class Function {
                 choose = input.nextInt();
             }
             System.out.println("Você escolheu a função: " + functions_list.get(choose).name);
+            functions_list.get(choose).colab_assigned++;
             return functions_list.get(choose);
         }
 
@@ -112,7 +112,11 @@ public class Function {
             }while(input.hasNextInt() == false );
             choose = input.nextInt();
         }
-        //verificar se nao tem colaboradores com essa função
+        if(functions_list.get(choose).colab_assigned > 0)
+        {
+            System.out.println("Essa função não pode ser removida, pois existem colaboradores associados a ela");
+            return;
+        }
         functions_list.remove(choose);
         System.out.println("Função removida com sucesso!");
     }
