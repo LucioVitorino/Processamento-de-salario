@@ -4,6 +4,9 @@
  */
 package isptec.pii_pt2.grupo1;
 
+import static isptec.pii_pt2.grupo1.Collaborator.create_birthday;
+import java.time.LocalDate;
+
 /**
  *
  * @author lucio
@@ -15,6 +18,7 @@ public class Processamento_de_salario {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // TODO code application logic here
         Collaborator colab = new Collaborator();
         colab.create_collaborator();
         
