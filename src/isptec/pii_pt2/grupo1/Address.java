@@ -29,7 +29,7 @@ public class Address {
         System.out.print("Rua: ");
          new_address.street.append(add_name());
         System.out.print("Numero da casa: ");
-         new_address.number_house = input.nextInt();
+         new_address.number_house = add_int();
         return new_address;
     }
     public static String add_name()
