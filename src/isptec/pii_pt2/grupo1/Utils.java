@@ -30,7 +30,7 @@ public class Utils {
       return Pattern.matches(regex, name);
   }
 
-  public static int choose_(ArrayList<Function> functions_list)
+  public static int validate_choose(ArrayList<Function> functions_list)
   {
       System.out.println("Lista Funçãoes----\n");
       //Listar as funções

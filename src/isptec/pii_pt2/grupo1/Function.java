@@ -2,7 +2,7 @@ package isptec.pii_pt2.grupo1;
 
 import java.util.ArrayList;
 import static isptec.pii_pt2.grupo1.Utils.add_name;
-import static isptec.pii_pt2.grupo1.Utils.choose_;
+import static isptec.pii_pt2.grupo1.Utils.validate_choose;
 import static isptec.pii_pt2.grupo1.Utils.input; 
 /**
  *
@@ -43,7 +43,8 @@ public class Function {
     public static Function select_function()
         {
             System.out.println("------Escolha a Funçao------");
-           int choose = choose_(functions_list);            functions_list.get(choose).colab_assigned++;
+           int choose = validate_choose(functions_list);
+           functions_list.get(choose).colab_assigned ++;
             return functions_list.get(choose);
         }
 
@@ -56,7 +57,7 @@ public class Function {
             return;
         }
         System.out.println("------Escolha a Funçao------");
-        int choose = choose_(functions_list);
+        int choose = validate_choose(functions_list);
         if(functions_list.get(choose).colab_assigned > 0)
         {
             System.out.println("Essa função não pode ser removida, pois existem colaboradores associados a ela");
