@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package isptec.pii_pt2.grupo1;
 
 import static isptec.pii_pt2.grupo1.Address.create_new_address;
@@ -17,6 +13,7 @@ import static isptec.pii_pt2.grupo1.Utils.validate_email;
 /**
  *
  * @author lucio
+ * @author jofre
  */
 public class Collaborator {
     int number;
@@ -48,7 +45,7 @@ public class Collaborator {
         
         System.out.println();
         novo.household = create_new_address();
-        start_data = LocalDate.now();
+        novo.start_data = LocalDate.now();
         list.add(novo);
     }
     

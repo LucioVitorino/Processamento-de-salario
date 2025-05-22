@@ -3,7 +3,10 @@ package isptec.pii_pt2.grupo1;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
-
+/**
+ * 
+ * @author jofre
+ */
 public class Utils {
  static Scanner input = new Scanner(System.in);
 
