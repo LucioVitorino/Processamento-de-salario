@@ -12,18 +12,21 @@ import java.util.Scanner;
  * @author lucio
  */
 public class Function {
-    ArrayList<Function> functions_list = new ArrayList<Function>();
-    Scanner input = new Scanner(System.in);
-   public Function select_function()
-    {
-        System.out.println("------Escolha a Funçao------");
-      
-        int choose = input.nextInt();
-        return chosen_Funtion(choose);
-    }
+    
+   static ArrayList<Function> functions_list = new ArrayList<Function>();
+    static Scanner input = new Scanner(System.in);
+    StringBuilder name = new StringBuilder();
+    double salary;
+    double bonus;
 
-    private Function chosen_Funtion(int choose)
-    {
-            
-    }
+    public static Function select_function()
+        {
+            System.out.println("------Escolha a Funçao------");
+            for (int i = 0; i < functions_list.size(); i++)
+            {
+                System.out.println(i + " - " + functions_list.get(i).name);
+            }
+            int choose = input.nextInt();
+            return functions_list.get(choose);
+        }
 }

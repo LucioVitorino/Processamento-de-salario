@@ -7,6 +7,7 @@ package isptec.pii_pt2.grupo1;
 /**
  *
  * @author lucio
+ * @author jofre
  */
 public class Processamento_de_salario {
 
