@@ -23,7 +23,7 @@ public class Collaborator {
     Address household = new Address();
     Function function = new Function();
     StringBuilder email = new StringBuilder();
-    Date start_data = new Date();
+    LocalDate start_data;
     Scanner input_colab =  new Scanner(System.in);
     
     public  Collaborator create_collaborator ()
@@ -33,8 +33,6 @@ public class Collaborator {
         System.out.print("Digite o nome: ");
         novo.name.append(input_colab.next());
         novo.birthday = create_birthday();
-        start_data.getTime();
-        
         System.out.print("Digite o seu email: ");
         //Validar email
         String email_ = validate_email(input_colab.next());
@@ -45,6 +43,7 @@ public class Collaborator {
         
         System.out.println();
         novo.household = create_new_address();
+        start_data = LocalDate.now();
         return novo;
     }
     
