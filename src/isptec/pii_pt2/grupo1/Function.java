@@ -6,6 +6,7 @@ package isptec.pii_pt2.grupo1;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -21,6 +22,7 @@ public class Function {
     int id;
     int colab_assigned;
 
+
     public static void create_function(String name, double salary, double bonus)
     {
         Function function = new Function();
@@ -35,8 +37,17 @@ public class Function {
     {
         System.out.println("-----Criando nova função-----");
         System.out.println("Digite o nome da função: ");
-        String name = input.next();
+        String name;
+        do{
+            name = input.next();
+            if(!validate_name(name) )
+            {
+                System.out.println("Digite um nome válido");
+            }
+        }while(!validate_name(name));
+
         System.out.println("Digite o salário: ");
+
         double salary = input.nextDouble();
         System.out.println("Digite o bônus: ");
         double bonus = input.nextDouble();
@@ -51,7 +62,6 @@ public class Function {
                 System.out.println(i + " - " + functions_list.get(i).name);
             }
             System.out.println("Escolha uma funçao: ");
-            //Validar se o número digitado é válido
              do{
                 if (input.hasNextInt() == false)
                 {
@@ -128,4 +138,13 @@ public class Function {
             System.out.println(i + " - " + functions_list.get(i).name);
         }
     }
+    public static boolean validate_name(String name)
+    {
+        //Validar nome
+        String regex = "^[a-zA-ZçÇáéíóúàèìòùÁÉÍÓÚÀÈÌÒÙãõÃÕâêîôûÂÊÎÔÛ\\s]+$";
+        if (name.isEmpty())
+            return false;
+        return Pattern.matches(regex, name);
+    }
+  
 }
