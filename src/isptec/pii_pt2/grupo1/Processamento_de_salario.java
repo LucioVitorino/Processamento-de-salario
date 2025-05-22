@@ -26,10 +26,8 @@ public class Processamento_de_salario {
         Collaborator colab = new Collaborator();
         new_function();
         new_function();
-        colab = colab.register_collaborator(colaboradores_list);
-        colaboradores_list.add(colab);
-        colab = colab.register_collaborator(colaboradores_list);
-        colaboradores_list.add(colab);
+        colab.register_collaborator(colaboradores_list);
+        colab.register_collaborator(colaboradores_list);
         print_collaborator(colaboradores_list);
     }
     

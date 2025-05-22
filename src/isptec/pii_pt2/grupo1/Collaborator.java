@@ -29,7 +29,7 @@ public class Collaborator {
     boolean is_active = true;
     Scanner input_colab =  new Scanner(System.in);
     
-    public  Collaborator register_collaborator (ArrayList<Collaborator> list)
+    public  void register_collaborator(ArrayList<Collaborator> list)
     {
         Collaborator novo = new Collaborator();
         System.out.println("------------Dados Pessoais-----------");
@@ -52,7 +52,6 @@ public class Collaborator {
         novo.household = create_new_address();
         start_data = LocalDate.now();
         list.add(novo);
-        return novo;
     }
     
     public boolean validate_email(StringBuilder email, ArrayList<Collaborator> list)
@@ -60,7 +59,7 @@ public class Collaborator {
         //Validar....
         for(Collaborator item: list)
         {
-            if(!email.toString().equals(item.toString()))
+            if(email.toString().equals(item.email.toString()))
                 return (false);
         }
         String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
