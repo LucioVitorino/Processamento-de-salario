@@ -10,6 +10,7 @@ import static isptec.pii_pt2.grupo1.Utils.add_name;
 import static isptec.pii_pt2.grupo1.Utils.gerador_id;
 import static isptec.pii_pt2.grupo1.Utils.input;
 import static isptec.pii_pt2.grupo1.Utils.validate_email;
+import java.util.Comparator;
 import java.util.Scanner;
 
 /**
@@ -33,7 +34,8 @@ public class Collaborator {
         Collaborator novo = new Collaborator();
         System.out.println("------------Dados Pessoais-----------");
         System.out.print("Digite o nome: ");
-        novo.name.append(add_name());
+        input.nextLine();
+        novo.name.append(input.nextLine());
         novo.birthday = create_birthday();
         StringBuilder email_ = new StringBuilder();
         do{
@@ -50,6 +52,7 @@ public class Collaborator {
         novo.household = create_new_address();
         novo.start_data = LocalDate.now();
         novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),novo.start_data.getYear(), novo.birthday.getMonthValue());
+        list.sort(Comparator.comparing(item -> item.name));
         list.add(novo);
     }
     
@@ -75,24 +78,49 @@ public class Collaborator {
     
     public static void disable_collaborator(String nome, ArrayList<Collaborator> list)
     {
-        for(Collaborator item : list)
-        {
-            if(nome.equals(item.name.toString())){
-                item.is_active = false;
+            int index = search_collaborator(list, nome);
+            if(index != -1){
+                list.get(index).is_active = false;
+                System.out.print("Funcionario desativado com exitos");
                 return ;
             }
-        }
+            else
+                System.out.println("Nâo eexistem nenhum colaborador com este nome!");
     }
     
     public static void print_collaborator(ArrayList<Collaborator> list)
     {
-        System.out.println("Nome\t\t\tEmail\t\t\tID");
+        System.out.println("Nome\t\t\tEmail\t\t\tID\t\t\tStatus");
         for(Collaborator item : list){
             System.out.print(item.name);
             System.out.print("\t\t\t");
             System.out.println(item.email);
             System.out.print("\t\t\t");
             System.out.print(item.Id);
+            System.out.print("\t\t\t");
+            System.out.println(item.is_active);
         }
+    }
+    
+    public static int  search_collaborator(ArrayList<Collaborator> list, String name)
+    {
+        int meio = list.size() / 2; 
+        int inicio = 0;
+        int fim = list.size();
+        
+        while(inicio <= fim)
+        {
+            if(list.get(meio).name.toString().compareTo(name) < 0)
+                inicio = meio + 1;
+            else
+                fim = meio - 1;
+            meio = (inicio + fim)/2;
+        }
+        
+        if(list.get(meio).name.toString().equals(name))
+            return (meio);
+        else
+            return (-1);
+        
     }
 }

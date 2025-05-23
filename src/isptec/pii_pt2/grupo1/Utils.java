@@ -94,7 +94,7 @@ public class Utils {
       
       public static String gerador_id(String nome, int day_birthday, int year_start, int month_birthday)
       {
-          String words[] = nome.split(" ");
+          String words[] = nome.toString().split(" ");
           String id  = " " + year_start + words[0].charAt(0) + words[words.length - 1].charAt(0) + day_birthday + month_birthday ;
           return(id);
       }
