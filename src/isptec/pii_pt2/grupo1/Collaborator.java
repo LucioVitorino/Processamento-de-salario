@@ -7,8 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import static isptec.pii_pt2.grupo1.Utils.add_name;
+import static isptec.pii_pt2.grupo1.Utils.gerador_id;
 import static isptec.pii_pt2.grupo1.Utils.input;
 import static isptec.pii_pt2.grupo1.Utils.validate_email;
+import java.util.Scanner;
 
 /**
  *
@@ -22,6 +24,7 @@ public class Collaborator {
     Address household = new Address();
     Function function = new Function();
     StringBuilder email = new StringBuilder();
+    String Id = new String();
     LocalDate start_data;
     boolean is_active = true;
 
@@ -46,11 +49,13 @@ public class Collaborator {
         System.out.println();
         novo.household = create_new_address();
         novo.start_data = LocalDate.now();
+        novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),novo.start_data.getYear(), novo.birthday.getMonthValue());
         list.add(novo);
     }
     
     public static LocalDate create_birthday() 
     {
+         Scanner input = new Scanner(System.in);
          DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
          String data = new String();
          LocalDate date = LocalDate.now();
@@ -81,11 +86,13 @@ public class Collaborator {
     
     public static void print_collaborator(ArrayList<Collaborator> list)
     {
-        System.out.println("Nome\t\t\tEmail");
+        System.out.println("Nome\t\t\tEmail\t\t\tID");
         for(Collaborator item : list){
             System.out.print(item.name);
             System.out.print("\t\t\t");
             System.out.println(item.email);
+            System.out.print("\t\t\t");
+            System.out.print(item.Id);
         }
     }
 }

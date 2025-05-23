@@ -1,5 +1,6 @@
 package isptec.pii_pt2.grupo1;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -89,5 +90,12 @@ public class Utils {
               }
           }
           return numero;
+      }
+      
+      public static String gerador_id(String nome, int day_birthday, int year_start, int month_birthday)
+      {
+          String words[] = nome.split(" ");
+          String id  = " " + year_start + words[0].charAt(0) + words[words.length - 1].charAt(0) + day_birthday + month_birthday ;
+          return(id);
       }
 }
