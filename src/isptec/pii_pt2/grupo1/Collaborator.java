@@ -1,6 +1,8 @@
 package isptec.pii_pt2.grupo1;
 import static isptec.pii_pt2.grupo1.Address.create_new_address;
 import static isptec.pii_pt2.grupo1.Function.select_function;
+import static isptec.pii_pt2.grupo1.Utils.add_int;
+import static isptec.pii_pt2.grupo1.Utils.add_name;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -26,26 +28,26 @@ public class Collaborator {
     LocalDate start_data;
     boolean is_active = true;
 
-    public  void register_collaborator(ArrayList<Collaborator> list)
+    public static void register_collaborator(ArrayList<Collaborator> list)
     {
         Collaborator novo = new Collaborator();
         System.out.println("------------Dados Pessoais-----------");
         System.out.print("Digite o nome: ");
         input.nextLine();
-        novo.name.append(input.nextLine());
-        novo.birthday = create_birthday();
-        novo.email.append(creat_email(list));
+        novo.name.append(add_name());
+        novo.birthday = create_date();
+        novo.email.append(create_email(list));
         System.out.println();
         novo.function = select_function();
         System.out.println();
         novo.household = create_new_address();
         novo.start_data = LocalDate.now();
-        novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),novo.start_data.getYear(), novo.birthday.getMonthValue());
-        list.sort(Comparator.comparing(item -> item.name));
+        novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),
+                novo.start_data.getYear(), novo.birthday.getMonthValue(),list.size());
         list.add(novo);
     }
     
-    public static LocalDate create_birthday() 
+    public static LocalDate create_date() 
     {
          DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
          String data = new String();
@@ -64,21 +66,21 @@ public class Collaborator {
         return (date);
     }
     
-    public static String creat_email(ArrayList<Collaborator> list)
+    public static String create_email(ArrayList<Collaborator> list)
     {
         String email_ = new String();
         System.out.print("Digite o seu email: ");
         do{
+            email_ = input.next();
            if(!validate_email(email_, list))
                System.out.print("Digite um email válido: ");
-                email_ = input.next();
         }while(!validate_email(email_, list));
         return (email_);
     }
     
-    public static void disable_collaborator(String nome, ArrayList<Collaborator> list)
+    public static void disable_collaborator(String Id, ArrayList<Collaborator> list)
     {
-            int index = search_collaborator(list, nome);
+            int index = search_collaborator(list, Id);
             if(index != -1){
                 list.get(index).is_active = false;
                 System.out.print("Funcionario desativado com exitos");
@@ -86,6 +88,25 @@ public class Collaborator {
             }
             else
                 System.out.println("Nâo eexistem nenhum colaborador com este nome!");
+    }
+    
+    public static void print_collaborator(Collaborator item)
+    {
+        System.out.println("-----------------------------------------");
+        System.out.println("1 - Nome : "+item.name);
+        System.out.println("2 - Data de aniversário : "+item.birthday);
+        System.out.println("3 - Morada : "+item.household);
+        System.out.println("4 - Função : "+item.function.name);
+        System.out.println("5 - Email : "+item.email);
+        System.out.println("6 - Data de Começo : "+item.email);
+    }
+    public static void list_collaborators(ArrayList<Collaborator> list)
+    {
+        for(Collaborator item : list)
+        {
+            if(item.is_active)
+                print_collaborator(item);
+        }
     }
     public static int  search_collaborator(ArrayList<Collaborator> list, String Id)
     {
@@ -114,16 +135,27 @@ public class Collaborator {
     {
        System.out.print("Informe o ID do colaborador : ");
        int index = search_collaborator(list, input.nextLine());
+       if(index == -1)
+       {
+           System.out.println("Colaborador inexistente");
+           return ;
+       }
+  
+       int opc = 0;
+       do{
+       print_collaborator(list.get(index));
+       System.out.println("0- Sair");
+       System.out.println("Qual informação deseja actualizar ? : ");
        input.nextLine();
-       int opc = input.nextInt();
+       opc = add_int();
        
        switch(opc){
            case 1:
-               update_name(list, index);
+               list.get(index).name.append(add_name());
                System.out.println("Nome actualizado com sucesso !");
                break;
            case 2:
-               list.get(index).birthday = create_birthday();
+               list.get(index).birthday = create_date();
                System.out.println("Data de aniversário actualizado com sucesso !");
                break;
            case 3:
@@ -135,12 +167,18 @@ public class Collaborator {
                System.out.println("função actualizado com sucesso !");
                break;
            case 5:
-               creat_email(list);
+               create_email(list);
                System.out.println("Email actualizado com sucesso !");
                break;
            case 6:
+               list.get(index).start_data = create_date();
+               System.out.println("Data de inicio actualizado com sucesso !");
+               break;
+           case 0:
+               break;
+           default:System.out.println("Digite uma Opção válida!");
+        }     
                
-       }
+       }while(opc != 0);
     }
-            
 }   

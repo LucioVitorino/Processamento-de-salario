@@ -21,7 +21,7 @@ public class Utils {
         String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         return Pattern.matches(regex, email);
     }
-    
+   
   public static boolean validate_name(String name)
   {
       //Validar nome
@@ -69,7 +69,8 @@ public class Utils {
       {
           String name = new String();
           do{
-              name = input.next();
+              name = input.nextLine();
+              input.nextLine();
               if(!validate_name(name))
               {
                   System.out.println("Digite um nome válido");
@@ -92,10 +93,12 @@ public class Utils {
           return numero;
       }
       
-      public static String gerador_id(String nome, int day_birthday, int year_start, int month_birthday)
+      public static String gerador_id(String nome, int day_birthday, int year_start, int month_birthday, int cont)
       {
           String words[] = nome.toString().split(" ");
-          String id  = " " + year_start + words[0].charAt(0) + words[words.length - 1].charAt(0) + day_birthday + month_birthday ;
+         
+          String id  = "" + year_start + words[0].charAt(0) + words[words.length - 1].charAt(0) + day_birthday + month_birthday +"_"+cont ;
+   
           return(id);
       }
 }
