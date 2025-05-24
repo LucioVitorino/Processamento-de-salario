@@ -3,6 +3,8 @@ package isptec.pii_pt2.grupo1;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
 import java.awt.Color;
+import java.io.File;
+import java.awt.Desktop;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -19,8 +21,8 @@ public class Report {
 
         Document pdf = new Document(PageSize.A4);
         try {
-            String Caminho = "files/Relatorio_de_Colaboradores.pdf";
-            PdfWriter.getInstance(pdf, new FileOutputStream(Caminho));
+            String caminho = "files/Relatorio_de_Colaboradores.pdf";
+            PdfWriter.getInstance(pdf, new FileOutputStream(caminho));
             pdf.open();
 
             // Metadados
@@ -74,6 +76,8 @@ public class Report {
             
 
             System.out.println("PDF gerado com sucesso.");
+            if (Desktop.isDesktopSupported()) 
+                Desktop.getDesktop().open(pdf);
             System.out.println("Acesse a página files do seu arquivo para a visualização!");
         } catch (DocumentException | IOException e) {
             System.err.println("Erro ao gerar PDF: " + e.getMessage());
