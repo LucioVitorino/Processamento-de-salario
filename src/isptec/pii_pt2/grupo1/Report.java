@@ -6,11 +6,12 @@ import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Report {
 
-    public static void report_collaborator(List<Collaborator> list) {
+    public static void report_collaborator(ArrayList<Collaborator> list) {
         if (list == null || list.isEmpty()) {
             System.out.println("A lista de colaboradores encontra-se vazia!");
             return;
@@ -18,7 +19,7 @@ public class Report {
 
         Document pdf = new Document(PageSize.A4);
         try {
-            String Caminho = "file/Relatorio_de_Colaboradores.pdf";
+            String Caminho = "files/Relatorio_de_Colaboradores.pdf";
             PdfWriter.getInstance(pdf, new FileOutputStream(Caminho));
             pdf.open();
 
@@ -52,12 +53,7 @@ public class Report {
                 table.addCell(String.valueOf(c.name));
                 table.addCell(String.valueOf(c.email));
                 table.addCell(String.valueOf(c.function.name));
-                String status;
-                status = String.valueOf(c.is_active);
-                if(status.equals("true"))
-                    table.addCell("ativo");
-                else
-                    table.addCell("desativado");
+                table.addCell(c.is_active ? "Ativo" : "Inativo");
             }
 
             pdf.add(table);
@@ -78,7 +74,7 @@ public class Report {
             
 
             System.out.println("PDF gerado com sucesso.");
-            System.out.println("Acesse a página source do seu arquivo para a visualização!");
+            System.out.println("Acesse a página files do seu arquivo para a visualização!");
         } catch (DocumentException | IOException e) {
             System.err.println("Erro ao gerar PDF: " + e.getMessage());
         } finally {

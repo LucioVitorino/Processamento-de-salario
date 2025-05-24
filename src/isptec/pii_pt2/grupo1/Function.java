@@ -71,7 +71,18 @@ public class Function {
         System.out.println("------Lista de Funções------");
         for (int i = 0; i < functions_list.size(); i++)
         {
-            System.out.println(i + " - " + functions_list.get(i).name);
+            System.out.println(functions_list.get(i).id + " - " + functions_list.get(i).name);
+        }
+    }
+    public static void print_list_of_functions()
+    {
+        for (Function f : functions_list) {
+            System.out.println("ID: " + f.id);
+            System.out.println("Nome: " + f.name);
+            System.out.println("Salário: " + f.salary);
+            System.out.println("Bônus: " + f.bonus);
+            System.out.println("Colaboradores associados: " + f.colab_assigned);
+            System.out.println("-----------------------------");
         }
     }
 }

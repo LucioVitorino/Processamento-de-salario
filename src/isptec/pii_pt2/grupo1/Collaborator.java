@@ -62,6 +62,7 @@ public class Collaborator {
         }catch(DateTimeParseException e)
         {
             System.out.print("Erro de fomatação de data !");
+            return (create_date());
         }
         return (date);
     }
@@ -87,7 +88,7 @@ public class Collaborator {
                 return ;
             }
             else
-                System.out.println("Nâo eexistem nenhum colaborador com este nome!");
+                System.out.println("Não existe nenhum colaborador com este nome!");
     }
     
     public static void print_collaborator(Collaborator item)
@@ -114,6 +115,8 @@ public class Collaborator {
     }
     public static int  search_collaborator(ArrayList<Collaborator> list, String Id)
     {
+        if(list.isEmpty())
+            return (-1);
         list.sort(Comparator.comparing(item -> item.Id));
         int meio = list.size() / 2; 
         int inicio = 0;
@@ -148,7 +151,7 @@ public class Collaborator {
        int opc = 0;
        do{
        print_collaborator(list.get(index));
-       System.out.println("0- Sair");
+       System.out.println("0 - Sair");
        System.out.println("Qual informação deseja actualizar ? : ");
        input.nextLine();
        opc = add_int();
@@ -181,8 +184,7 @@ public class Collaborator {
            case 0:
                break;
            default:System.out.println("Digite uma Opção válida!");
-        }     
-               
+        } 
        }while(opc != 0);
     }
 }   

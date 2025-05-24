@@ -7,64 +7,72 @@ import static isptec.pii_pt2.grupo1.Collaborator.register_collaborator;
 import static isptec.pii_pt2.grupo1.Collaborator.search_collaborator;
 import static isptec.pii_pt2.grupo1.Collaborator.update_collaborator;
 import static isptec.pii_pt2.grupo1.Function.delete_function;
-import static isptec.pii_pt2.grupo1.Function.list_functions;
 import static isptec.pii_pt2.grupo1.Function.new_function;
 import static isptec.pii_pt2.grupo1.Utils.add_int;
 import static isptec.pii_pt2.grupo1.Utils.input;
-
+import static isptec.pii_pt2.grupo1.Report.report_collaborator;
+import static isptec.pii_pt2.grupo1.Function.print_list_of_functions;
 import java.util.ArrayList;
 
 public class Menu {
 
-    public static void menu_collaborator(ArrayList<Collaborator> list) {
+    public static void menu_collaborator(ArrayList<Collaborator> list, ArrayList<Function> functions_list) {
+        if (functions_list == null || functions_list.isEmpty()) {
+            System.out.println("A lista de funções encontra-se vazia! Por favor, crie uma função antes de adicionar colaboradores.");
+            return;
+        }
         int option1;
-    do{
-        System.out.println("========= MENU COLABORADORES =========");
-        System.out.println("1. Cadastrar Colaborador");
-        System.out.println("2. Actualizar Colaborador");
-        System.out.println("3. Desativar Colaborador");
-        System.out.println("4. Pesquisar Colaborador");
-        System.out.println("5. Imprimir Colaboradores");
-        System.out.println("0. Voltar ao Menu Principal");
-        System.out.println("=====================================");
-        System.out.print("Escolha uma opção: ");
-         option1 = add_int();
-          switch (option1) {
-            case 1:
-                register_collaborator(list);
-                break;
-            case 2:
-                update_collaborator(list);
-                break;
-            case 3:
-                System.out.print("Digite o ID do colaborador a desativar: ");
-                String id = input.nextLine();
-                disable_collaborator(id, list);
-                System.out.println();
-                break;
-            case 4:
-                System.out.print("Digite o ID do colaborador a pesquisar: ");
-                id = input.nextLine();
-                System.out.println();
-                int index = search_collaborator(list, id);
-                if (index == -1) {
-                    System.out.println("Colaborador não encontrado.");
+        do{
+            System.out.println("========= MENU COLABORADORES =========");
+            System.out.println("1. Cadastrar Colaborador");
+            System.out.println("2. Actualizar Colaborador");
+            System.out.println("3. Desativar Colaborador");
+            System.out.println("4. Pesquisar Colaborador");
+            System.out.println("5. Imprimir Colaboradores");
+            System.out.println("0. Voltar ao Menu Principal");
+            System.out.println("=====================================");
+            System.out.print("Escolha uma opção: ");
+            option1 = add_int();
+            switch (option1) {
+                case 1:
+                    register_collaborator(list);
                     break;
-                } 
-                print_collaborator(list.get(index));
-                System.out.println();
-                break;
-            case 5:
-                list_collaborators(list);
-                break;
-            case 0:
-                System.out.println("Voltando ao Menu Principal...");
-                break;
-            default:
-                System.out.println("Opção inválida. Tente novamente.");
-                break;
-          }
-        } while (option1 != 0); 
+                case 2:
+                    update_collaborator(list);
+                    break;
+                case 3:
+                    System.out.print("Digite o ID do colaborador a desativar: ");
+                    String id = input.nextLine();
+                    disable_collaborator(id, list);
+                    System.out.println();
+                    break;
+                case 4:
+                    System.out.print("Digite o ID do colaborador a pesquisar: ");
+                    id = input.next();
+                    int index = search_collaborator(list, id);
+                    if (index == -1) {
+                        System.out.println("Colaborador não encontrado.");
+                        break;
+                    } 
+                    print_collaborator(list.get(index));
+                    System.out.println();
+                    break;
+                case 5:
+                    if(list.isEmpty()) {
+                        System.out.println("Nenhum colaborador cadastrado.");
+                    } else {
+                        System.out.println("Lista de Colaboradores:");
+                        list_collaborators(list);
+                    }
+                    break;
+                case 0:
+                    System.out.println("Voltando ao Menu Principal...");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+            }
+            } while (option1 != 0); 
     }
 
     public static void menu_function() {
@@ -86,7 +94,7 @@ public class Menu {
                     delete_function();
                     break;
                 case 3:
-                    list_functions();
+                print_list_of_functions();
                     break;
                 case 0:
                     System.out.println("Voltando ao Menu Principal...");
@@ -98,7 +106,7 @@ public class Menu {
             } while (option2 != 0);
     }
 
-    public static void menu_report() {
+    public static void menu_report(ArrayList<Collaborator> list) {
         int option3;
         do{
             System.out.println("========= MENU RELATÓRIOS =========");
@@ -109,7 +117,7 @@ public class Menu {
             option3 = add_int();
                 switch (option3) {
                 case 1:
-                    //  gennerate_report();
+                    report_collaborator(list);
                     break;
                 case 0:
                     System.out.println("Voltando ao Menu Principal...");
@@ -120,7 +128,9 @@ public class Menu {
                 }
             } while (option3 != 0);
     }
-  public static void print_welcome(ArrayList<Collaborator> list) {
+  public static void print_welcome(ArrayList<Collaborator> list, ArrayList<Function> functions_list) {
+   
+
     int option;
      do{
         System.out.println("========== BEM VINDO ===========");
@@ -135,13 +145,13 @@ public class Menu {
         option = add_int();
         switch (option) {
             case 1:
-                menu_collaborator(list);
+                menu_collaborator(list, functions_list);
                 break;
             case 2:
                 menu_function();
                 break;
             case 3:
-                menu_report();
+                menu_report(list);
                 break;
             case 0:
                 System.out.println("Saindo...");
