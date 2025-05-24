@@ -17,6 +17,8 @@ import java.util.ArrayList;
 public class Menu {
 
     public static void menu_collaborator(ArrayList<Collaborator> list) {
+        int option1;
+    do{
         System.out.println("========= MENU COLABORADORES =========");
         System.out.println("1. Cadastrar Colaborador");
         System.out.println("2. Actualizar Colaborador");
@@ -26,10 +28,8 @@ public class Menu {
         System.out.println("0. Voltar ao Menu Principal");
         System.out.println("=====================================");
         System.out.print("Escolha uma opção: ");
-         int option;
-        do{
-         option = add_int();
-          switch (option) {
+         option1 = add_int();
+          switch (option1) {
             case 1:
                 register_collaborator(list);
                 break;
@@ -64,91 +64,95 @@ public class Menu {
                 System.out.println("Opção inválida. Tente novamente.");
                 break;
           }
-        } while (option != 0); 
+        } while (option1 != 0); 
     }
 
     public static void menu_function() {
-        System.out.println("========= MENU FUNÇÕES =========");
-        System.out.println("1. Criar Função");
-        System.out.println("2. Remover Função");
-        System.out.println("3. Listar Funções");
-        System.out.println("0. Voltar ao Menu Principal");
-        System.out.println("================================");
-        System.out.print("Escolha uma opção: ");
-         int option;
+        int option2;
         do{
-          option = add_int();
-            switch (option) {
-              case 1:
-                  new_function();
-                  break;
-              case 2:
-                  delete_function();
-                  break;
-              case 3:
-                  list_functions();
-                  break;
-              case 0:
-                  System.out.println("Voltando ao Menu Principal...");
-                  break;
-              default:
-                  System.out.println("Opção inválida. Tente novamente.");
-                  break;
-            }
-          } while (option != 0);
+            System.out.println("========= MENU FUNÇÕES =========");
+            System.out.println("1. Criar Função");
+            System.out.println("2. Remover Função");
+            System.out.println("3. Listar Funções");
+            System.out.println("0. Voltar ao Menu Principal");
+            System.out.println("================================");
+            System.out.print("Escolha uma opção: ");
+            option2 = add_int();
+                switch (option2) {
+                case 1:
+                    new_function();
+                    break;
+                case 2:
+                    delete_function();
+                    break;
+                case 3:
+                    list_functions();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao Menu Principal...");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+                }
+            } while (option2 != 0);
     }
 
     public static void menu_report() {
-        System.out.println("========= MENU RELATÓRIOS =========");
-        System.out.println("1. Gerar Relatório");
-        System.out.println("0. Voltar ao Menu Principal");
-        System.out.println("===================================");
-        System.out.print("Escolha uma opção: ");
-         int option;
+        int option3;
         do{
-          option = add_int();
-            switch (option) {
-              case 1:
-                //  gennerate_report();
-                  break;
-              case 0:
-                  System.out.println("Voltando ao Menu Principal...");
-                  break;
-              default:
-                  System.out.println("Opção inválida. Tente novamente.");
-                  break;
-            }
-          } while (option != 0);
-        
+            System.out.println("========= MENU RELATÓRIOS =========");
+            System.out.println("1. Gerar Relatório");
+            System.out.println("0. Voltar ao Menu Principal");
+            System.out.println("===================================");
+            System.out.print("Escolha uma opção: ");
+            option3 = add_int();
+                switch (option3) {
+                case 1:
+                    //  gennerate_report();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao Menu Principal...");
+                    break;
+                default:
+                    System.out.println("Opção inválida. Tente novamente.");
+                    break;
+                }
+            } while (option3 != 0);
     }
   public static void print_welcome(ArrayList<Collaborator> list) {
-      System.out.println("========= BEM VINDO ==========");
-      System.out.println("Sistema de Gestão de Colaboradores");
-      System.out.println("========= MENU =========");
-      System.out.println("1. Colaboradores");
-      System.out.println("2. Funções");
-      System.out.println("3. Gerir Relatório");
-      System.out.println("0. Sair");
-      System.out.println("================================");
-      System.out.print("Escolha uma opção: ");
-      int option = add_int();
-      switch (option) {
-          case 1:
-              menu_collaborator(list);
-              break;
-          case 2:
-              menu_function();
-              break;
-          case 3:
-              menu_report();
-              break;
-          case 0:
-              System.out.println("Saindo...");
-              System.exit(0);
-              break;
-          default:
-              System.out.println("Opção inválida. Tente novamente.");
-      }
+    int option;
+     do{
+        System.out.println("========== BEM VINDO ===========");
+        System.out.println("Sistema de Gestão de Colaboradores");
+        System.out.println("========= MENU ================");
+        System.out.println("1. Colaboradores");
+        System.out.println("2. Funções");
+        System.out.println("3. Gerir Relatório");
+        System.out.println("0. Sair");
+        System.out.println("================================");
+        System.out.print("Escolha uma opção: ");
+        option = add_int();
+        switch (option) {
+            case 1:
+                menu_collaborator(list);
+                break;
+            case 2:
+                menu_function();
+                break;
+            case 3:
+                menu_report();
+                break;
+            case 0:
+                System.out.println("Saindo...");
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Opção inválida. Tente novamente.");
+        }
+            System.out.println();
+    } while (option != 0);
+
 }
 
 }
