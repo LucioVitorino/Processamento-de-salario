@@ -1,6 +1,5 @@
 package isptec.pii_pt2.grupo1;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
