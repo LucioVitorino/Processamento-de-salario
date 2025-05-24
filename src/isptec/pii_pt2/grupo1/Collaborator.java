@@ -92,13 +92,17 @@ public class Collaborator {
     
     public static void print_collaborator(Collaborator item)
     {
-        System.out.println("-----------------------------------------");
-        System.out.println("1 - Nome : "+item.name);
-        System.out.println("2 - Data de aniversário : "+item.birthday);
-        System.out.println("3 - Morada : "+item.household);
-        System.out.println("4 - Função : "+item.function.name);
-        System.out.println("5 - Email : "+item.email);
-        System.out.println("6 - Data de Começo : "+item.email);
+        System.out.println("=============="+item.Id+"================");
+        System.out.println("1 - Nome: " + item.name);
+        System.out.println("2 - Data de Aniversário: " + item.birthday.getDayOfMonth() + "/" 
+                + item.birthday.getMonthValue() + "/" + item.birthday.getYear());
+        System.out.println("3 - Morada: \n" + item.household.number_house + " " + item.household.street + ", " 
+                + item.household.city + ", " + item.household.country);
+        System.out.println("4 - Função: " + item.function.name);
+        System.out.println("5 - Email: " + item.email);
+        System.out.println("6 - Data de Início: " + item.start_data.getDayOfMonth() + "/" 
+                + item.start_data.getMonthValue() + "/" + item.start_data.getYear());
+        System.out.println("Ativo: " + (item.is_active ? "Sim" : "Não"));
     }
     public static void list_collaborators(ArrayList<Collaborator> list)
     {
