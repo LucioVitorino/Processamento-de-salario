@@ -69,12 +69,12 @@ public class Utils {
           String name = new String();
           do{
               name = input.nextLine();
-              input.nextLine();
               if(!validate_name(name))
               {
                   System.out.println("Digite um nome válido");
               }
           }while(!validate_name(name));
+          input.nextLine(); // Limpar o buffer do scanner
           return name;
       }
       public static int add_int() {
