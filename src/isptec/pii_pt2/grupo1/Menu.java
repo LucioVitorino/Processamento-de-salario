@@ -51,7 +51,7 @@ public class Menu {
                 System.out.println();
                 break;
             case 5:
-                list_collaborator(list);
+                list_collaboratores(list);
                 break;
             case 0:
                 System.out.println("Voltando ao Menu Principal...");
