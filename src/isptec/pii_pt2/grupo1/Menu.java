@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class Menu {
 
-    public void menu_collaborator(ArrayList<Collaborator> list) {
+    public static void menu_collaborator(ArrayList<Collaborator> list) {
         System.out.println("========= MENU COLABORADORES =========");
         System.out.println("1. Cadastrar Colaborador");
         System.out.println("2. Actualizar Colaborador");
@@ -67,7 +67,7 @@ public class Menu {
         } while (option != 0); 
     }
 
-    public void menu_function() {
+    public static void menu_function() {
         System.out.println("========= MENU FUNÇÕES =========");
         System.out.println("1. Criar Função");
         System.out.println("2. Remover Função");
@@ -98,7 +98,7 @@ public class Menu {
           } while (option != 0);
     }
 
-    public void menu_report() {
+    public static void menu_report() {
         System.out.println("========= MENU RELATÓRIOS =========");
         System.out.println("1. Gerar Relatório");
         System.out.println("0. Voltar ao Menu Principal");
@@ -121,7 +121,7 @@ public class Menu {
           } while (option != 0);
         
     }
-  public void print_welcome(ArrayList<Collaborator> list) {
+  public static void print_welcome(ArrayList<Collaborator> list) {
       System.out.println("========= BEM VINDO ==========");
       System.out.println("Sistema de Gestão de Colaboradores");
       System.out.println("========= MENU =========");
