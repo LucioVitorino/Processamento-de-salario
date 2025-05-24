@@ -1,7 +1,11 @@
 package isptec.pii_pt2.grupo1;
 
 import static isptec.pii_pt2.grupo1.Collaborator.disable_collaborator;
+import static isptec.pii_pt2.grupo1.Collaborator.list_collaborators;
+import static isptec.pii_pt2.grupo1.Collaborator.print_collaborator;
+import static isptec.pii_pt2.grupo1.Collaborator.register_collaborator;
 import static isptec.pii_pt2.grupo1.Collaborator.search_collaborator;
+import static isptec.pii_pt2.grupo1.Collaborator.update_collaborator;
 import static isptec.pii_pt2.grupo1.Function.delete_function;
 import static isptec.pii_pt2.grupo1.Function.list_functions;
 import static isptec.pii_pt2.grupo1.Function.new_function;
@@ -51,7 +55,7 @@ public class Menu {
                 System.out.println();
                 break;
             case 5:
-                list_collaborator(list);
+                list_collaborators(list);
                 break;
             case 0:
                 System.out.println("Voltando ao Menu Principal...");
