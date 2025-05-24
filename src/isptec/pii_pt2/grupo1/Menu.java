@@ -42,7 +42,13 @@ public class Menu {
                 System.out.print("Digite o ID do colaborador a pesquisar: ");
                 id = input.nextLine();
                 System.out.println();
-                print_collaborator(list, id);
+                int index = search_collaborator(list, id);
+                if (index == -1) {
+                    System.out.println("Colaborador não encontrado.");
+                    break;
+                } 
+                print_collaborator(list.get(index));
+                System.out.println();
                 break;
             case 5:
                 list_collaborator(list);
