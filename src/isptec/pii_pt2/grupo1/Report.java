@@ -77,8 +77,9 @@ public class Report {
 
             System.out.println("PDF gerado com sucesso.");
             if (Desktop.isDesktopSupported()) 
-                Desktop.getDesktop().open(pdf);
+                Desktop.getDesktop().open(new File(caminho));
             System.out.println("Acesse a página files do seu arquivo para a visualização!");
+            
         } catch (DocumentException | IOException e) {
             System.err.println("Erro ao gerar PDF: " + e.getMessage());
         } finally {

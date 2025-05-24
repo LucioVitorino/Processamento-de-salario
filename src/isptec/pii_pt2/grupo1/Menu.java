@@ -17,10 +17,6 @@ import java.util.ArrayList;
 public class Menu {
 
     public static void menu_collaborator(ArrayList<Collaborator> list, ArrayList<Function> functions_list) {
-        if (functions_list == null || functions_list.isEmpty()) {
-            System.out.println("A lista de funções encontra-se vazia! Por favor, crie uma função antes de adicionar colaboradores.");
-            return;
-        }
         int option1;
         do{
             System.out.println("========= MENU COLABORADORES =========");
@@ -35,6 +31,10 @@ public class Menu {
             option1 = add_int();
             switch (option1) {
                 case 1:
+                if (functions_list == null || functions_list.isEmpty()) {
+                    System.out.println("A lista de funções encontra-se vazia! Por favor, crie uma função antes de adicionar colaboradores.");
+                    return;
+                }
                     register_collaborator(list);
                     break;
                 case 2:
