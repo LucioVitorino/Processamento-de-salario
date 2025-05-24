@@ -42,7 +42,7 @@ public class Menu {
                     break;
                 case 3:
                     System.out.print("Digite o ID do colaborador a desativar: ");
-                    String id = input.nextLine();
+                    String id = input.next();
                     disable_collaborator(id, list);
                     System.out.println();
                     break;
@@ -134,7 +134,7 @@ public class Menu {
     int option;
      do{
         System.out.println("========== BEM VINDO ===========");
-        System.out.println("Sistema de Gestão de Colaboradores");
+        System.out.println("PROCESSAMENTO DE SALARIO");
         System.out.println("========= MENU ================");
         System.out.println("1. Colaboradores");
         System.out.println("2. Funções");

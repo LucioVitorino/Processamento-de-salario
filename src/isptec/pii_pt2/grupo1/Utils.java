@@ -1,5 +1,7 @@
 package isptec.pii_pt2.grupo1;
 
+import static isptec.pii_pt2.grupo1.Function.list_functions;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -30,15 +32,10 @@ public class Utils {
       return Pattern.matches(regex, name);
   }
 
-  public static int validate_choose(ArrayList<Function> functions_list)
+  public static Integer validate_choose(ArrayList<Function> functions_list)
   {
-      System.out.println("Lista Funçãoes----\n");
-      //Listar as funções
-      for (int i = 0; i < functions_list.size(); i++)
-            {
-                System.out.println(i + " - " + functions_list.get(i).name);
-            }
-            System.out.println("Escolha uma funçao: ");
+            list_functions();
+             System.out.println("Escolha uma funçao: ");
              do{
                 if (input.hasNextInt() == false)
                 {
@@ -46,36 +43,37 @@ public class Utils {
                     input.next();
                 }
             }while(input.hasNextInt() == false );
-            int choose = input.nextInt();
-            while (choose < 0 || choose >= functions_list.size())
-            {
-                System.out.println("Digite um número válido e que existe na lista");
-                //Validar se o número digitado é válido
-                do{
-                    if (input.hasNextInt() == false)
-                    {
-                        System.out.println("Digite um número válido");
-                        input.next();
-                    }
-                }while(input.hasNextInt() == false );
-                choose = input.nextInt();
+            int id = input.nextInt();
+            for (int i = 0; i < functions_list.size(); i++) 
+                if (functions_list.get(i).id == id) 
+                    return i;
+            System.out.println("Função não encontrada, tente novamente.");
+            return null;
+        }
+        public static String capitalize(String str) {
+            String[] words = str.split(" ");
+            StringBuilder capitalized = new StringBuilder();
+            for (String word : words) {
+                if (word.length() > 0) {
+                    capitalized.append(Character.toUpperCase(word.charAt(0)))
+                               .append(word.substring(1).toLowerCase())
+                               .append(" ");
+                }
             }
-            System.out.println("Você escolheu a função: " + functions_list.get(choose).name);
-            return choose;
-   
-      }
+            return capitalized.toString().trim();
+        }
       public static String add_name()
       {
           String name = new String();
           do{
+                input.nextLine();
               name = input.nextLine();
               if(!validate_name(name))
               {
                   System.out.println("Digite um nome válido");
               }
           }while(!validate_name(name));
-          input.nextLine(); // Limpar o buffer do scanner
-          return name;
+          return capitalize(name);
       }
       public static int add_int() {
           int numero = 0;

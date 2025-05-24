@@ -33,7 +33,6 @@ public class Collaborator {
         Collaborator novo = new Collaborator();
         System.out.println("------------Dados Pessoais-----------");
         System.out.print("Digite o nome: ");
-        input.nextLine();
         novo.name.append(add_name());
         novo.birthday = create_date();
         novo.email.append(create_email(list));
@@ -84,20 +83,20 @@ public class Collaborator {
             int index = search_collaborator(list, Id);
             if(index != -1){
                 list.get(index).is_active = false;
-                System.out.print("Funcionario desativado com exitos");
+                System.out.print(list.get(index).name + " desativado com Sucesso!");
                 return ;
             }
             else
-                System.out.println("Não existe nenhum colaborador com este nome!");
+                System.out.println("Não existe nenhum colaborador com este id!");
     }
     
     public static void print_collaborator(Collaborator item)
     {
-        System.out.println("=============="+item.Id+"================");
+        System.out.println("-----"+item.Id+"-----");
         System.out.println("1 - Nome: " + item.name);
         System.out.println("2 - Data de Aniversário: " + item.birthday.getDayOfMonth() + "/" 
                 + item.birthday.getMonthValue() + "/" + item.birthday.getYear());
-        System.out.println("3 - Morada: \n" + item.household.number_house + " " + item.household.street + ", " 
+        System.out.println("3 - Morada: " + item.household.number_house + " " + item.household.street + ", " 
                 + item.household.city + ", " + item.household.country);
         System.out.println("4 - Função: " + item.function.name);
         System.out.println("5 - Email: " + item.email);
@@ -113,6 +112,7 @@ public class Collaborator {
                 print_collaborator(item);
         }
     }
+    /*
     public static int  search_collaborator(ArrayList<Collaborator> list, String Id)
     {
         if(list.isEmpty())
@@ -135,17 +135,38 @@ public class Collaborator {
             return (meio);
         else
             return (-1);
-        
+    }
+    */
+    public static int search_collaborator(ArrayList<Collaborator> list, String Id) {
+        if (list == null || list.isEmpty())
+            return -1;
+    
+        list.sort(Comparator.comparing(item -> item.Id));
+        int inicio = 0;
+        int fim = list.size() - 1;
+    
+        while (inicio <= fim) {
+            int meio = (inicio + fim) / 2;
+            int comparacao = list.get(meio).Id.compareTo(Id);
+    
+            if (comparacao == 0)
+                return meio;
+            else if (comparacao < 0)
+                inicio = meio + 1;
+            else
+                fim = meio - 1;
+        }
+        return -1;
     }
     
     public static void  update_collaborator(ArrayList<Collaborator> list)
     {
        System.out.print("Informe o ID do colaborador : ");
-       int index = search_collaborator(list, input.nextLine());
+       int index = search_collaborator(list, input.next());
        if(index == -1)
        {
            System.out.println("Colaborador inexistente");
-           return ;
+              return;
        }
   
        int opc = 0;
@@ -153,7 +174,6 @@ public class Collaborator {
        print_collaborator(list.get(index));
        System.out.println("0 - Sair");
        System.out.println("Qual informação deseja actualizar ? : ");
-       input.nextLine();
        opc = add_int();
        
        switch(opc){

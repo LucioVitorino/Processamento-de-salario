@@ -32,6 +32,10 @@ public class Function {
         System.out.println("-----Criando nova função-----");
         System.out.println("Digite o nome da função: ");
         String name = add_name();
+        if (function_exists(name)) {
+            System.out.println("Essa função já existe.");
+            return;
+        }
         System.out.println("Digite o salário: ");
         double salary = input.nextDouble();
         System.out.println("Digite o bônus: ");
@@ -42,9 +46,11 @@ public class Function {
     public static Function select_function()
         {
             System.out.println("------Escolha a Funçao------");
-           int choose = validate_choose(functions_list);
-           functions_list.get(choose).colab_assigned ++;
-            return functions_list.get(choose);
+           Integer choose = validate_choose(functions_list);
+           if (choose == null)
+               select_function();
+           functions_list.get(choose.intValue()).colab_assigned ++;
+            return functions_list.get(choose.intValue());
         }
 
     public static void delete_function()
@@ -56,19 +62,24 @@ public class Function {
             return;
         }
         System.out.println("------Escolha a Funçao------");
-        int choose = validate_choose(functions_list);
-        if(functions_list.get(choose).colab_assigned > 0)
+        Integer choose = validate_choose(functions_list);
+        if(choose == null)
+        {
+            System.out.println("Função não encontrada.");
+            return;
+        }
+        if(functions_list.get(choose.intValue()).colab_assigned > 0)
         {
             System.out.println("Essa função não pode ser removida, pois existem colaboradores associados a ela");
             return;
         }
-        functions_list.remove(choose);
+        functions_list.remove(choose.intValue());
         System.out.println("Função removida com sucesso!");
     }
 
     public static void list_functions()
     {
-        System.out.println("------Lista de Funções------");
+        System.out.println("Lista de Funções");
         for (int i = 0; i < functions_list.size(); i++)
         {
             System.out.println(functions_list.get(i).id + " - " + functions_list.get(i).name);
@@ -76,6 +87,12 @@ public class Function {
     }
     public static void print_list_of_functions()
     {
+        if(functions_list.isEmpty()) {
+            System.out.println("Não existem funções cadastradas.");
+            return;
+        }
+        System.out.println("Lista de Funções:");
+        System.out.println("-----------------------------");
         for (Function f : functions_list) {
             System.out.println("ID: " + f.id);
             System.out.println("Nome: " + f.name);
@@ -84,5 +101,13 @@ public class Function {
             System.out.println("Colaboradores associados: " + f.colab_assigned);
             System.out.println("-----------------------------");
         }
+    }
+    public static boolean function_exists(String name) {
+        for (Function f : functions_list) {
+            if (f.name.toString().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
