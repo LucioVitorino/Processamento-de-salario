@@ -11,11 +11,11 @@ import java.util.regex.Pattern;
 public class Utils {
  static Scanner input = new Scanner(System.in);
 
-  public static boolean validate_email(StringBuilder email, ArrayList<Collaborator> list)
+  public static boolean validate_email(String email, ArrayList<Collaborator> list)
     {
         for(Collaborator item: list)
         {
-            if(email.toString().equals(item.email.toString()))
+            if(email.equals(item.email.toString()))
                 return (false);
         }
         String regex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
