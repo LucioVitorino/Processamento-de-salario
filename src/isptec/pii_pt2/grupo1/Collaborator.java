@@ -34,17 +34,9 @@ public class Collaborator {
         input.nextLine();
         novo.name.append(input.nextLine());
         novo.birthday = create_birthday();
-        StringBuilder email_ = new StringBuilder();
-        do{
-        System.out.print("Digite o seu email: ");
-        email_.append(input.next());
-        }while(!validate_email(email_, list));
-        
-        novo.email.append(email_);
-        
+        novo.email.append(creat_email(list));
         System.out.println();
         novo.function = select_function();
-        
         System.out.println();
         novo.household = create_new_address();
         novo.start_data = LocalDate.now();
@@ -61,7 +53,7 @@ public class Collaborator {
          
         try{
             
-        System.out.print("Data de nascimento (dd/MM/yyyy) : ");
+        System.out.print("Informe a data (dd/MM/yyyy) : ");
         data = input.next();
         date = LocalDate.parse(data, formato);
         
@@ -70,6 +62,18 @@ public class Collaborator {
             System.out.print("Erro de fomatação de data !");
         }
         return (date);
+    }
+    
+    public static String creat_email(ArrayList<Collaborator> list)
+    {
+        String email_ = new String();
+        System.out.print("Digite o seu email: ");
+        do{
+           if(!validate_email(email_, list))
+               System.out.print("Digite um email válido: ");
+                email_ = input.next();
+        }while(!validate_email(email_, list));
+        return (email_);
     }
     
     public static void disable_collaborator(String nome, ArrayList<Collaborator> list)
@@ -83,25 +87,60 @@ public class Collaborator {
             else
                 System.out.println("Nâo eexistem nenhum colaborador com este nome!");
     }
-    public static int  search_collaborator(ArrayList<Collaborator> list, String name)
+    public static int  search_collaborator(ArrayList<Collaborator> list, String Id)
     {
+        list.sort(Comparator.comparing(item -> item.Id));
         int meio = list.size() / 2; 
         int inicio = 0;
         int fim = list.size();
         
         while(inicio <= fim)
         {
-            if(list.get(meio).name.toString().compareTo(name) < 0)
+            if(list.get(meio).Id.toString().compareTo(Id) < 0)
                 inicio = meio + 1;
             else
                 fim = meio - 1;
             meio = (inicio + fim)/2;
         }
         
-        if(list.get(meio).name.toString().equals(name))
+        if(list.get(meio).Id.toString().equals(Id))
             return (meio);
         else
             return (-1);
         
     }
+    
+    public static void  update_collaborator(ArrayList<Collaborator> list)
+    {
+       System.out.print("Informe o ID do colaborador : ");
+       int index = search_collaborator(list, input.nextLine());
+       input.nextLine();
+       int opc = input.nextInt();
+       
+       switch(opc){
+           case 1:
+               update_name(list, index);
+               System.out.println("Nome actualizado com sucesso !");
+               break;
+           case 2:
+               list.get(index).birthday = create_birthday();
+               System.out.println("Data de aniversário actualizado com sucesso !");
+               break;
+           case 3:
+               list.get(index).household = create_new_address();
+               System.out.println("Morada actualizado com sucesso !");
+               break;
+           case 4:
+               list.get(index).function = select_function();
+               System.out.println("função actualizado com sucesso !");
+               break;
+           case 5:
+               creat_email(list);
+               System.out.println("Email actualizado com sucesso !");
+               break;
+           case 6:
+               
+       }
+    }
+            
 }   
