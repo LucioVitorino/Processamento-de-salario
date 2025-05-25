@@ -67,9 +67,7 @@ public class Utils {
       {
           String name = new String();
           do{
-              //input.nextLine();
               name = input.nextLine();
-              //input.nextLine();
               if(!validate_name(name))
               {
                   System.out.println("Digite um nome válido");
