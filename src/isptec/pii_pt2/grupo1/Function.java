@@ -24,6 +24,11 @@ public class Function {
         function.salary = salary;
         function.bonus = bonus;
         function.id = functions_list.size() + 1;
+        for(Function item : functions_list)
+        {
+         if(function.id == item.id)
+             function.id = functions_list.size() + 2;  
+        }
         function.colab_assigned = 0;
         functions_list.add(function);
     }
