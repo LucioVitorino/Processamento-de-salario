@@ -43,12 +43,14 @@ public class Menu {
                 case 3:
                     System.out.print("Digite o ID do colaborador a desativar: ");
                     String id = input.next();
+                    input.nextLine();
                     disable_collaborator(id, list);
                     System.out.println();
                     break;
                 case 4:
                     System.out.print("Digite o ID do colaborador a pesquisar: ");
                     id = input.next();
+                    input.nextLine();
                     int index = search_collaborator(list, id);
                     if (index == -1) {
                         System.out.println("Colaborador não encontrado.");

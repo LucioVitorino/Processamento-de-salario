@@ -100,7 +100,7 @@ public class Collaborator {
         System.out.println("1 - Nome: " + item.name);
         System.out.println("2 - Data de Aniversário: " + item.birthday.getDayOfMonth() + "/" 
                 + item.birthday.getMonthValue() + "/" + item.birthday.getYear());
-        System.out.println("3 - Morada: " + item.household.number_house + " " + item.household.street + ", " 
+        System.out.println("3 - Morada: " + item.household.number_house + ", " + item.household.street + ", " 
                 + item.household.city + ", " + item.household.country);
         System.out.println("4 - Função: " + item.function.name);
         System.out.println("5 - Email: " + item.email);
@@ -167,6 +167,7 @@ public class Collaborator {
     {
        System.out.print("Informe o ID do colaborador : ");
        int index = search_collaborator(list, input.next());
+       input.nextLine();
        if(index == -1)
        {
            System.out.println("Colaborador inexistente");
@@ -212,6 +213,7 @@ public class Collaborator {
                    list.get(index).is_active = false;
                else
                    list.get(index).is_active = true;
+                System.out.println("Status actualizado com sucesso !");
            case 0:
                break;
            default:System.out.println("Digite uma Opção válida!");

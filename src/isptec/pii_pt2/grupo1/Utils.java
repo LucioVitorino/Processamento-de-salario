@@ -44,6 +44,7 @@ public class Utils {
                 }
             }while(input.hasNextInt() == false );
             int id = input.nextInt();
+            input.nextLine();
             for (int i = 0; i < functions_list.size(); i++) 
                 if (functions_list.get(i).id == id) 
                     return i;
@@ -66,7 +67,7 @@ public class Utils {
       {
           String name = new String();
           do{
-              input.nextLine();
+              //input.nextLine();
               name = input.nextLine();
               //input.nextLine();
               if(!validate_name(name))
@@ -82,6 +83,7 @@ public class Utils {
           while (!valido) {
               try {
                   numero = input.nextInt();
+                  input.nextLine();
                   valido = true;
               } catch (Exception e) {
                   System.out.println("Digite um número válido");

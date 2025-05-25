@@ -45,8 +45,10 @@ public class Function {
         }
         System.out.println("Digite o salário: ");
         double salary = input.nextDouble();
+        input.nextLine();
         System.out.println("Digite o bônus: ");
         double bonus = input.nextDouble();
+        input.nextLine();
         create_function(name, salary, bonus);
         System.out.println("Função criada com sucesso!");
     }
