@@ -56,6 +56,7 @@ public class Collaborator {
             
         System.out.print("Informe a data (dd/MM/yyyy) : ");
         data = input.next();
+        input.nextLine();
         date = LocalDate.parse(data, formato);
         
         }catch(DateTimeParseException e)
@@ -72,6 +73,7 @@ public class Collaborator {
         System.out.print("Digite o seu email: ");
         do{
             email_ = input.next();
+            input.nextLine();
            if(!validate_email(email_, list))
                System.out.print("Digite um email válido: ");
         }while(!validate_email(email_, list));
@@ -102,7 +104,7 @@ public class Collaborator {
         System.out.println("5 - Email: " + item.email);
         System.out.println("6 - Data de Início: " + item.start_data.getDayOfMonth() + "/" 
                 + item.start_data.getMonthValue() + "/" + item.start_data.getYear());
-        System.out.println("Ativo: " + (item.is_active ? "Sim" : "Não"));
+        System.out.println("7 - Status: " + (item.is_active ? "Activo" : "Inactivo"));
     }
     public static void list_collaborators(ArrayList<Collaborator> list)
     {
@@ -178,6 +180,7 @@ public class Collaborator {
        
        switch(opc){
            case 1:
+               list.get(index).name.setLength(0);
                list.get(index).name.append(add_name());
                System.out.println("Nome actualizado com sucesso !");
                break;
@@ -201,6 +204,11 @@ public class Collaborator {
                list.get(index).start_data = create_date();
                System.out.println("Data de inicio actualizado com sucesso !");
                break;
+           case 7:
+               if(list.get(index).is_active)
+                   list.get(index).is_active = false;
+               else
+                   list.get(index).is_active = true;
            case 0:
                break;
            default:System.out.println("Digite uma Opção válida!");

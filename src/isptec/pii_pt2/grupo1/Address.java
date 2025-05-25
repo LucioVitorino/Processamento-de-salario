@@ -26,7 +26,8 @@ public class Address {
         
         System.out.println("------------Endereço-----------");
         System.out.print("Digite o nome da rua: ");
-        String name = input.next();
+        String name = input.nextLine();
+        input.nextLine();
         System.out.print("Digite o número da casa: ");
         int number = add_int();
         System.out.print("Digite a cidade: ");
