@@ -67,7 +67,7 @@ public class Utils {
           String name = new String();
           do{
               input.nextLine();
-              name = input.next();
+              name = input.nextLine();
               //input.nextLine();
               if(!validate_name(name))
               {

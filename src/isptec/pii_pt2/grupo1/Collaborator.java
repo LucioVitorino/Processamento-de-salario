@@ -199,7 +199,8 @@ public class Collaborator {
                System.out.println("função actualizado com sucesso !");
                break;
            case 5:
-               create_email(list);
+               list.get(index).email.setLength(0);
+               list.get(index).email.append(create_email(list));
                System.out.println("Email actualizado com sucesso !");
                break;
            case 6:

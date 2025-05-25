@@ -16,9 +16,12 @@ public class Address {
     public static Address create_address(String name, int number, String city, String country)
     {
             Address address = new Address();
+            address.street.setLength(0);
             address.street.append(name);
             address.number_house = number;
+            address.city.setLength(0);
             address.city.append(city);
+            address.country.setLength(0);
             address.country.append(country);
             return address;
     }
