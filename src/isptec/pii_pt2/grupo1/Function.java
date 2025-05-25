@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import static isptec.pii_pt2.grupo1.Utils.add_name;
 import static isptec.pii_pt2.grupo1.Utils.validate_choose;
 import static isptec.pii_pt2.grupo1.Utils.input; 
+import static java.util.Collections.list;
+import java.util.Comparator;
 /**
  *
  * @author lucio
@@ -53,7 +55,7 @@ public class Function {
             System.out.println("------Escolha a Funçao------");
            Integer choose = validate_choose(functions_list);
            if (choose == null)
-               select_function();
+                 return null;
            functions_list.get(choose.intValue()).colab_assigned ++;
             return functions_list.get(choose.intValue());
         }
@@ -80,6 +82,7 @@ public class Function {
         }
         functions_list.remove(choose.intValue());
         System.out.println("Função removida com sucesso!");
+        functions_list.sort(Comparator.comparing(item -> item.id));
     }
 
     public static void list_functions()
@@ -87,7 +90,7 @@ public class Function {
         System.out.println("Lista de Funções");
         for (int i = 0; i < functions_list.size(); i++)
         {
-            System.out.println(functions_list.get(i).id + " - " + functions_list.get(i).name);
+            System.out.println(i + 1 +": "+functions_list.get(i).id + " - " + functions_list.get(i).name);
         }
     }
     public static void print_list_of_functions()

@@ -40,7 +40,7 @@ public class Utils {
                 if (input.hasNextInt() == false)
                 {
                     System.out.println("Digite um número válido");
-                    input.next();
+                    //input.nextInt();
                 }
             }while(input.hasNextInt() == false );
             int id = input.nextInt();
@@ -67,7 +67,7 @@ public class Utils {
           String name = new String();
           do{
               input.nextLine();
-              name = input.nextLine();
+              name = input.next();
               //input.nextLine();
               if(!validate_name(name))
               {

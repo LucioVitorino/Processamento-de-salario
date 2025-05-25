@@ -37,7 +37,9 @@ public class Collaborator {
         novo.birthday = create_date();
         novo.email.append(create_email(list));
         System.out.println();
+        do{
         novo.function = select_function();
+        }while(novo.function == null);
         System.out.println();
         novo.household = create_new_address();
         novo.start_data = LocalDate.now();
