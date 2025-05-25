@@ -1,5 +1,5 @@
 package isptec.pii_pt2.grupo1;
-import static isptec.pii_pt2.grupo1.Address.create_new_address;
+import static isptec.pii_pt2.grupo1.Address.address;
 import static isptec.pii_pt2.grupo1.Function.select_function;
 import static isptec.pii_pt2.grupo1.Utils.add_int;
 import static isptec.pii_pt2.grupo1.Utils.add_name;
@@ -41,7 +41,7 @@ public class Collaborator {
         novo.function = select_function();
         }while(novo.function == null);
         System.out.println();
-        novo.household = create_new_address();
+        novo.household = address.create_new_address();
         novo.start_data = LocalDate.now();
         novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),
                 novo.start_data.getYear(), novo.birthday.getMonthValue(),list.size());
@@ -192,7 +192,7 @@ public class Collaborator {
                System.out.println("Data de aniversário actualizado com sucesso !");
                break;
            case 3:
-               list.get(index).household = create_new_address();
+               list.get(index).household = address.create_new_address();
                System.out.println("Morada actualizado com sucesso !");
                break;
            case 4:
