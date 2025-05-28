@@ -2,8 +2,7 @@ package isptec.pii_pt2.grupo1;
 import java.util.ArrayList;
 import static isptec.pii_pt2.grupo1.Utils.add_name;
 import static isptec.pii_pt2.grupo1.Utils.validate_choose;
-import static isptec.pii_pt2.grupo1.Utils.input; 
-import static java.util.Collections.list;
+import static isptec.pii_pt2.grupo1.Utils.input;
 import java.util.Comparator;
 /**
  *

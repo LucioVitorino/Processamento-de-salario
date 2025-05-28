@@ -8,12 +8,13 @@ import static isptec.pii_pt2.grupo1.Utils.input;
  * @author jofre
  */
 public class Address {
-    static StringBuilder street = new StringBuilder();
-    static StringBuilder country = new StringBuilder();
-    static StringBuilder city = new StringBuilder();
-    static int number_house;
+    static Address address = new Address();
+    StringBuilder street = new StringBuilder();
+    StringBuilder country = new StringBuilder();
+    StringBuilder city = new StringBuilder();
+    int number_house;
 
-    public static Address create_address(String name, int number, String city, String country)
+    public Address create_address(String name, int number, String city, String country)
     {
             Address address = new Address();
             address.street.setLength(0);
@@ -25,7 +26,7 @@ public class Address {
             address.country.append(country);
             return address;
     }
-    public static Address create_new_address() {
+    public Address create_new_address() {
         
         System.out.println("------------Endereço-----------");
         System.out.print("Digite o nome da rua: ");
