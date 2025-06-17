@@ -26,11 +26,11 @@ public class Collaborator {
     StringBuilder email = new StringBuilder();
     String Id = new String();
     LocalDate start_data;
-    int horas_trabalhadas;
-    int horas_extras;
-    int Dias_uteis;
-    int faltas;
-    StringBuilder licenca;
+    int worked_hours;
+    int worked_days;
+    int extra_hours;
+    int fouls;
+    StringBuilder license;
     boolean is_active = true;
 
     public static void register_collaborator(ArrayList<Collaborator> list)
