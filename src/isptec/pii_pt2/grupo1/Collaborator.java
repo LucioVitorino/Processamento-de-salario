@@ -21,11 +21,16 @@ public class Collaborator {
     int number;
     StringBuilder name = new StringBuilder();
     LocalDate birthday;
-    Address household = new Address();
+    StringBuilder household = new StringBuilder();
     Function function = new Function();
     StringBuilder email = new StringBuilder();
     String Id = new String();
     LocalDate start_data;
+    int horas_trabalhadas;
+    int horas_extras;
+    int Dias_uteis;
+    int faltas;
+    StringBuilder licenca;
     boolean is_active = true;
 
     public static void register_collaborator(ArrayList<Collaborator> list)
