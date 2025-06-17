@@ -1,5 +1,4 @@
 package isptec.pii_pt2.grupo1;
-import static isptec.pii_pt2.grupo1.Address.address;
 import static isptec.pii_pt2.grupo1.Function.select_function;
 import static isptec.pii_pt2.grupo1.Utils.add_int;
 import static isptec.pii_pt2.grupo1.Utils.add_name;
@@ -11,7 +10,7 @@ import static isptec.pii_pt2.grupo1.Utils.gerador_id;
 import static isptec.pii_pt2.grupo1.Utils.input;
 import static isptec.pii_pt2.grupo1.Utils.validate_email;
 import java.util.Comparator;
-
+import org.jason.JSONObject;
 /**
  *
  * @author lucio
@@ -32,7 +31,7 @@ public class Collaborator {
     int fouls;
     StringBuilder license;
     boolean is_active = true;
-
+    double net_salary;
     public static void register_collaborator(ArrayList<Collaborator> list)
     {
         Collaborator novo = new Collaborator();
