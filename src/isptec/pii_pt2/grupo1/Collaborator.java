@@ -10,7 +10,7 @@ import static isptec.pii_pt2.grupo1.Utils.gerador_id;
 import static isptec.pii_pt2.grupo1.Utils.input;
 import static isptec.pii_pt2.grupo1.Utils.validate_email;
 import java.util.Comparator;
-import org.jason.JSONObject;
+import org.json.JSONObject;
 /**
  *
  * @author lucio
@@ -32,7 +32,8 @@ public class Collaborator {
     StringBuilder license;
     boolean is_active = true;
     double net_salary;
-    public static void register_collaborator(ArrayList<Collaborator> list)
+    
+    public static void register_collaborator_manually(ArrayList<Collaborator> list)
     {
         Collaborator novo = new Collaborator();
         System.out.println("------------Dados Pessoais-----------");
@@ -45,13 +46,26 @@ public class Collaborator {
         novo.function = select_function();
         }while(novo.function == null);
         System.out.println();
-        novo.household = address.create_new_address();
+        novo.household.append(input.nextLine());
         novo.start_data = LocalDate.now();
         novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),
                 novo.start_data.getYear(), novo.birthday.getMonthValue(),list.size());
         list.add(novo);
     }
-    
+    public static void register_collaborator_json(JSONObject json, ArrayList<Collaborator> list)
+    {
+        Collaborator novo = new Collaborator();
+        novo.name.append(json.getString("name"));
+        novo.birthday = LocalDate.parse(json.getString("birthday"));
+        novo.email.append(json.getString("email"));
+        novo.household.append(json.getString("household"));
+        novo.function = select_function();
+        novo.start_data = LocalDate.parse(json.getString("start_data"));
+        novo.Id = json.getString("Id");
+        novo.is_active = json.getBoolean("is_active");
+        list.add(novo);
+        //
+    }
     public static LocalDate create_date() 
     {
          DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -104,8 +118,7 @@ public class Collaborator {
         System.out.println("1 - Nome: " + item.name);
         System.out.println("2 - Data de Aniversário: " + item.birthday.getDayOfMonth() + "/" 
                 + item.birthday.getMonthValue() + "/" + item.birthday.getYear());
-        System.out.println("3 - Morada: " + item.household.number_house + ", " + item.household.street + ", " 
-                + item.household.city + ", " + item.household.country);
+        System.out.println("3 - Morada: " + item.household);
         System.out.println("4 - Função: " + item.function.name);
         System.out.println("5 - Email: " + item.email);
         System.out.println("6 - Data de Início: " + item.start_data.getDayOfMonth() + "/" 
@@ -120,31 +133,6 @@ public class Collaborator {
                 print_collaborator(item);
         }
     }
-    /*
-    public static int  search_collaborator(ArrayList<Collaborator> list, String Id)
-    {
-        if(list.isEmpty())
-            return (-1);
-        list.sort(Comparator.comparing(item -> item.Id));
-        int meio = list.size() / 2; 
-        int inicio = 0;
-        int fim = list.size();
-        
-        while(inicio <= fim)
-        {
-            if(list.get(meio).Id.toString().compareTo(Id) < 0)
-                inicio = meio + 1;
-            else
-                fim = meio - 1;
-            meio = (inicio + fim)/2;
-        }
-        
-        if(list.get(meio).Id.toString().equals(Id))
-            return (meio);
-        else
-            return (-1);
-    }
-    */
     public static int search_collaborator(ArrayList<Collaborator> list, String Id) {
         if (list == null || list.isEmpty())
             return -1;
@@ -196,7 +184,8 @@ public class Collaborator {
                System.out.println("Data de aniversário actualizado com sucesso !");
                break;
            case 3:
-               list.get(index).household = address.create_new_address();
+                list.get(index).household.setLength(0);
+               list.get(index).household.append(input.nextLine());
                System.out.println("Morada actualizado com sucesso !");
                break;
            case 4:
