@@ -18,12 +18,13 @@ public class Function {
     StringBuilder name = new StringBuilder();
     double salary;
     int expected_hours;
+    int absent_discount;
     double bonus;
     int id;
     int colab_assigned;
 
 
-    public static void create_function(String name, double salary, double bonus)
+    public static void create_function(String name, double salary, double bonus, double discount, int expectative)
     {
         Function function = new Function();
         function.name.append(name);
@@ -53,7 +54,11 @@ public class Function {
         System.out.println("Digite o bônus: ");
         double bonus = input.nextDouble();
         input.nextLine();
-        create_function(name, salary, bonus);
+        System.out.println("Digite as horas esperadas por mês: ");
+        int expectative = input.nextInt();
+        System.out.println("Digite o valor de desconto por falta: ");
+        double discount = input.nextInt();
+        create_function(name, salary, bonus, discount, expectative );
         System.out.println("Função criada com sucesso!");
     }
     public static Function select_function()
@@ -147,7 +152,7 @@ public class Function {
                 }
                 double salary = jsonObject.getDouble("salary");
                 double bonus = jsonObject.getDouble("bonus");
-                create_function(name, salary, bonus);
+               create_function(name, salary, bonus,);
             }
         } catch (Exception e) {
             System.out.println("Erro ao ler o arquivo JSON: " + e.getMessage());

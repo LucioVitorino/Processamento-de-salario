@@ -1,6 +1,7 @@
 package isptec.pii_pt2.grupo1;
 
 import static isptec.pii_pt2.grupo1.Collaborator.disable_collaborator;
+import static isptec.pii_pt2.grupo1.Collaborator.generate_salary;
 import static isptec.pii_pt2.grupo1.Collaborator.list_collaborators;
 import static isptec.pii_pt2.grupo1.Collaborator.print_collaborator;
 import static isptec.pii_pt2.grupo1.Collaborator.register_collaborator;
@@ -159,6 +160,7 @@ public class Menu {
         System.out.println("1. Colaboradores");
         System.out.println("2. Funções");
         System.out.println("3. Gerir Relatório");
+        System.out.println("4. Gerar Salário");
         System.out.println("0. Sair");
         System.out.println("================================");
         System.out.print("Escolha uma opção: ");
@@ -173,6 +175,8 @@ public class Menu {
             case 3:
                 menu_report(list);
                 break;
+            case 4:
+                generate_salary(list);
             case 0:
                 System.out.println("Saindo...");
                 System.exit(0);

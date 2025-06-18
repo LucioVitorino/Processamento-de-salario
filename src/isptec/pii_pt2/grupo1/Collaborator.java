@@ -32,8 +32,8 @@ public class Collaborator {
     LocalDate start_data;
     int worked_hours;
     int worked_days;
-    int extra_hours;
     int fouls;
+    int extra_hours;
     StringBuilder license;
     boolean is_active = true;
     double net_salary;
@@ -53,6 +53,13 @@ public class Collaborator {
         System.out.println();
         novo.household.append(input.nextLine());
         novo.start_data = LocalDate.now();
+        System.out.print("Informe a quantidade de horas trabalhadas: !");
+        novo.worked_hours = input.nextInt();
+        System.out.print("Informe a quantidade de horas trabalhadas: !");
+        novo.worked_days = input.nextInt();
+        System.out.print("Informe a quantidade de faltas: !");
+        novo.fouls = input.nextInt();
+        
         novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),
                 novo.start_data.getYear(), novo.birthday.getMonthValue(),list.size());
         list.add(novo);
@@ -144,6 +151,7 @@ public class Collaborator {
         System.out.println("6 - Data de Início: " + item.start_data.getDayOfMonth() + "/" 
                 + item.start_data.getMonthValue() + "/" + item.start_data.getYear());
         System.out.println("7 - Status: " + (item.is_active ? "Activo" : "Inactivo"));
+        System.out.println("8 - Tempo de trabalho mensal: "+item.worked_days+" dias /"+item.worked_hours+"horas");
     }
     public static void list_collaborators(ArrayList<Collaborator> list)
     {
@@ -227,6 +235,12 @@ public class Collaborator {
                else
                    list.get(index).is_active = true;
                 System.out.println("Status actualizado com sucesso !");
+           case 8:
+               System.out.print("Informe a quantidade de horas trabalhadas: !");
+               list.get(index).worked_hours = input.nextInt();
+               System.out.print("Informe a quantidade de horas trabalhadas: !");
+               list.get(index).worked_days = input.nextInt();
+               break;
            case 0:
                break;
            default:System.out.println("Digite uma Opção válida!");
@@ -241,13 +255,13 @@ public class Collaborator {
             {
                 System.out.println("Horas trabalhas e dias trabalhados não batem cert!");
                 System.out.println("Ide do colaborador : "+item.Id);
-                System.out.println("Escolha a 7 para actualizar as horas e os dias trabalhados");
+                System.out.println("Escolha a 8 para actualizar as horas e os dias trabalhados");
                 update_collaborator(list);
             }
             if (item.worked_hours > item.function.expected_hours)
                   item.extra_hours = item.worked_hours - item.function.expected_hours;
             item.net_salary = (item.function.salary * (item.worked_hours + item.extra_hours));
-            item.net_salary -= item.fouls *   
+            item.net_salary -= item.fouls  * item.function.absent_discount;
         }
     }
 }   
