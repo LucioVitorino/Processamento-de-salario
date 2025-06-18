@@ -13,6 +13,7 @@ public class Function {
    static ArrayList<Function> functions_list = new ArrayList<Function>();
     StringBuilder name = new StringBuilder();
     double salary;
+    int expected_hours;
     double bonus;
     int id;
     int colab_assigned;
