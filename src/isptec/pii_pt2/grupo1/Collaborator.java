@@ -64,6 +64,7 @@ public class Collaborator {
         colaborador.birthday = LocalDate.parse(json.getString("birthday"));
         colaborador.household.append(json.getString("household"));
         colaborador.function = get_function_by_id(json.getInt("function_id"));
+        get_function_by_id(json.getInt("function_id")).colab_assigned++;
         colaborador.email.append(json.getString("email"));
         colaborador.start_data = LocalDate.parse(json.getString("start_data"));
         colaborador.is_active = json.getBoolean("is_active");
