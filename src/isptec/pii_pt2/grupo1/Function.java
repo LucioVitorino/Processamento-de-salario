@@ -140,6 +140,10 @@ public class Function {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String name = jsonObject.getString("name");
+                if (function_exists(name)) {
+                    System.out.println("Essa função já existe.");
+                    continue;
+                }
                 double salary = jsonObject.getDouble("salary");
                 double bonus = jsonObject.getDouble("bonus");
                 create_function(name, salary, bonus);
