@@ -4,6 +4,10 @@ import static isptec.pii_pt2.grupo1.Utils.add_name;
 import static isptec.pii_pt2.grupo1.Utils.validate_choose;
 import static isptec.pii_pt2.grupo1.Utils.input;
 import java.util.Comparator;
+import java.nio.file.Paths;
+import static java.nio.file.Files.readAllBytes;
+import org.json.JSONObject;
+import org.json.JSONArray;
 /**
  *
  * @author lucio
@@ -86,7 +90,16 @@ public class Function {
         System.out.println("Função removida com sucesso!");
         functions_list.sort(Comparator.comparing(item -> item.id));
     }
-
+    // get functions by id
+    public static Function get_function_by_id(int id)
+    {
+        for (Function f : functions_list) {
+            if (f.id == id) {
+                return f;
+            }
+        }
+        return null;
+    }
     public static void list_functions()
     {
         System.out.println("Lista de Funções");
@@ -120,4 +133,26 @@ public class Function {
         }
         return false;
     }
+    // read functions from json file and add to functions_list
+    public static void read_functions_from_json_file(String filePath) {
+        try {
+            String content = new String(readAllBytes(Paths.get(filePath)));
+            JSONArray jsonArray = new JSONArray(content);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String name = jsonObject.getString("name");
+                if (function_exists(name)) {
+                    System.out.println("Essa função já existe.");
+                    continue;
+                }
+                double salary = jsonObject.getDouble("salary");
+                double bonus = jsonObject.getDouble("bonus");
+                create_function(name, salary, bonus);
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao ler o arquivo JSON: " + e.getMessage());
+        }
+    }
+    
+
 }
