@@ -1,4 +1,5 @@
 package isptec.pii_pt2.grupo1;
+import static isptec.pii_pt2.grupo1.Function.get_function_by_id;
 import static isptec.pii_pt2.grupo1.Function.select_function;
 import static isptec.pii_pt2.grupo1.Utils.add_int;
 import static isptec.pii_pt2.grupo1.Utils.add_name;
@@ -10,7 +11,10 @@ import static isptec.pii_pt2.grupo1.Utils.gerador_id;
 import static isptec.pii_pt2.grupo1.Utils.input;
 import static isptec.pii_pt2.grupo1.Utils.validate_email;
 import java.util.Comparator;
+import java.nio.file.Paths;
+import static java.nio.file.Files.readAllBytes;
 import org.json.JSONObject;
+import org.json.JSONArray;
 /**
  *
  * @author lucio
@@ -33,7 +37,7 @@ public class Collaborator {
     boolean is_active = true;
     double net_salary;
     
-    public static void register_collaborator_manually(ArrayList<Collaborator> list)
+    public static void register_collaborator(ArrayList<Collaborator> list)
     {
         Collaborator novo = new Collaborator();
         System.out.println("------------Dados Pessoais-----------");
@@ -52,21 +56,35 @@ public class Collaborator {
                 novo.start_data.getYear(), novo.birthday.getMonthValue(),list.size());
         list.add(novo);
     }
-    public static void register_collaborator_json(JSONObject json, ArrayList<Collaborator> list)
-    {
-        Collaborator novo = new Collaborator();
-        novo.name.append(json.getString("name"));
-        novo.birthday = LocalDate.parse(json.getString("birthday"));
-        novo.email.append(json.getString("email"));
-        novo.household.append(json.getString("household"));
-        novo.function = select_function();
-        novo.start_data = LocalDate.parse(json.getString("start_data"));
-        novo.Id = json.getString("Id");
-        novo.is_active = json.getBoolean("is_active");
-        list.add(novo);
-        //
+
+    public static Collaborator read_collaborator_from_json(JSONObject json) {
+        Collaborator colaborador = new Collaborator();
+        colaborador.Id = json.getString("Id");
+        colaborador.name.append(json.getString("name"));
+        colaborador.birthday = LocalDate.parse(json.getString("birthday"));
+        colaborador.household.append(json.getString("household"));
+        colaborador.function = get_function_by_id(json.getInt("function_id"));
+        colaborador.email.append(json.getString("email"));
+        colaborador.start_data = LocalDate.parse(json.getString("start_data"));
+        colaborador.is_active = json.getBoolean("is_active");
+        return colaborador;
     }
-    public static LocalDate create_date() 
+    
+    public static void read_collaborators_from_json_file(ArrayList<Collaborator> list, String filePath){
+        try {
+            String content = new String(readAllBytes(Paths.get(filePath)));
+           JSONArray jsonArray = new JSONArray(content);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                Collaborator colaborador = read_collaborator_from_json(jsonObject);
+                list.add(colaborador);
+            }
+        } catch (java.io.IOException e) {
+            System.out.println("Erro ao ler o arquivo JSON: " + e.getMessage());
+        }
+    }
+
+  public static LocalDate create_date() 
     {
          DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
          String data = new String();

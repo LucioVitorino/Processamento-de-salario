@@ -6,6 +6,7 @@ import static isptec.pii_pt2.grupo1.Collaborator.print_collaborator;
 import static isptec.pii_pt2.grupo1.Collaborator.register_collaborator;
 import static isptec.pii_pt2.grupo1.Collaborator.search_collaborator;
 import static isptec.pii_pt2.grupo1.Collaborator.update_collaborator;
+import static isptec.pii_pt2.grupo1.Collaborator.read_collaborators_from_json_file;
 import static isptec.pii_pt2.grupo1.Function.delete_function;
 import static isptec.pii_pt2.grupo1.Function.new_function;
 import static isptec.pii_pt2.grupo1.Utils.add_int;
@@ -21,10 +22,11 @@ public class Menu {
         do{
             System.out.println("========= MENU COLABORADORES =========");
             System.out.println("1. Cadastrar Colaborador");
-            System.out.println("2. Actualizar Colaborador");
-            System.out.println("3. Desativar Colaborador");
-            System.out.println("4. Pesquisar Colaborador");
-            System.out.println("5. Imprimir Colaboradores");
+            System.out.println("2. Ler Automaticamente Colaborador");
+            System.out.println("3. Actualizar Colaborador");
+            System.out.println("4. Desativar Colaborador");
+            System.out.println("5. Pesquisar Colaborador");
+            System.out.println("6. Imprimir Colaboradores");
             System.out.println("0. Voltar ao Menu Principal");
             System.out.println("=====================================");
             System.out.print("Escolha uma opção: ");
@@ -38,16 +40,25 @@ public class Menu {
                     register_collaborator(list);
                     break;
                 case 2:
-                    update_collaborator(list);
+                if (functions_list == null || functions_list.isEmpty()) {
+                    System.out.println("A lista de funções encontra-se vazia! Por favor, crie uma função antes de adicionar colaboradores.");
+                    return;
+                }
+                    System.out.println("Lendo colaboradores automaticamente...");
+                    read_collaborators_from_json_file(list, "files/collaborators.json");
+                    System.out.println("Colaboradores lidos com sucesso!");
                     break;
                 case 3:
+                    update_collaborator(list);
+                    break;
+                case 4:
                     System.out.print("Digite o ID do colaborador a desativar: ");
                     String id = input.next();
                     input.nextLine();
                     disable_collaborator(id, list);
                     System.out.println();
                     break;
-                case 4:
+                case 5:
                     System.out.print("Digite o ID do colaborador a pesquisar: ");
                     id = input.next();
                     input.nextLine();
@@ -59,7 +70,7 @@ public class Menu {
                     print_collaborator(list.get(index));
                     System.out.println();
                     break;
-                case 5:
+                case 6:
                     if(list.isEmpty()) {
                         System.out.println("Nenhum colaborador cadastrado.");
                     } else {
@@ -82,8 +93,9 @@ public class Menu {
         do{
             System.out.println("========= MENU FUNÇÕES =========");
             System.out.println("1. Criar Função");
-            System.out.println("2. Remover Função");
-            System.out.println("3. Listar Funções");
+            System.out.println("2. Ler Funções Automaticamente");
+            System.out.println("3. Remover Função");
+            System.out.println("4. Listar Funções");
             System.out.println("0. Voltar ao Menu Principal");
             System.out.println("================================");
             System.out.print("Escolha uma opção: ");
@@ -93,9 +105,15 @@ public class Menu {
                     new_function();
                     break;
                 case 2:
-                    delete_function();
+                 // leitura automatica
+                    System.out.println("Lendo funções automaticamente...");
+                    Function.read_functions_from_json_file("files/functions.json");
+                    System.out.println("Funções lidas com sucesso!");
                     break;
                 case 3:
+                    delete_function();
+                    break;
+                case 4:
                 print_list_of_functions();
                     break;
                 case 0:
