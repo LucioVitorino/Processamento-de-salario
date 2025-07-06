@@ -1,7 +1,19 @@
+
 package isptec.pii_pt2.grupo1;
 
-import com.lowagie.text.*;
-import com.lowagie.text.pdf.*;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Chunk;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.Element;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfPCell;
+
 import java.awt.Color;
 import java.io.File;
 import java.awt.Desktop;
@@ -46,7 +58,12 @@ public class Report {
             pdf.add(new Paragraph("Este relatório apresenta os colaboradores da empresa LJK, Corp."));
             pdf.add(Chunk.NEWLINE);
 
-            // Tabela aprimorada
+
+            // Fonte Arial (ou Helvetica se não disponível)
+            Font tableFont = FontFactory.getFont("Arial", "windows-1252", true, 9);
+            if (tableFont == null) {
+                tableFont = FontFactory.getFont(FontFactory.HELVETICA, 9);
+            }
 
             PdfPTable table = new PdfPTable(10); // 10 colunas
             table.setWidthPercentage(100);
@@ -54,24 +71,24 @@ public class Report {
             table.setSpacingAfter(10f);
 
             // Cabeçalhos da tabela
-            addTableHeader(table, "ID", "Nome", "Nascimento", "Email", "Função", "Morada", "Início", "Status", "Horas/Faltas", "Salário Mensal");
+            addTableHeader(table, tableFont, "ID", "Nome", "Nascimento", "Email", "Função", "Morada", "Início", "Status", "Horas/Faltas", "Salário Mensal");
 
             // Dados com linhas alternadas e cores para status
             boolean alternate = false;
             for (Collaborator c : list) {
                 Color bg = alternate ? new Color(240,240,255) : Color.WHITE;
-                table.addCell(makeCell(String.valueOf(c.Id), bg));
-                table.addCell(makeCell(String.valueOf(c.name), bg));
-                table.addCell(makeCell(c.birthday != null ? c.birthday.toString() : "", bg));
-                table.addCell(makeCell(String.valueOf(c.email), bg));
-                table.addCell(makeCell(c.function != null ? String.valueOf(c.function.name) : "", bg));
-                table.addCell(makeCell(String.valueOf(c.household), bg));
-                table.addCell(makeCell(c.start_data != null ? c.start_data.toString() : "", bg));
+                table.addCell(makeCell(String.valueOf(c.Id), bg, tableFont));
+                table.addCell(makeCell(String.valueOf(c.name), bg, tableFont));
+                table.addCell(makeCell(c.birthday != null ? c.birthday.toString() : "", bg, tableFont));
+                table.addCell(makeCell(String.valueOf(c.email), bg, tableFont));
+                table.addCell(makeCell(c.function != null ? String.valueOf(c.function.name) : "", bg, tableFont));
+                table.addCell(makeCell(String.valueOf(c.household), bg, tableFont));
+                table.addCell(makeCell(c.start_data != null ? c.start_data.toString() : "", bg, tableFont));
                 // Status colorido
                 Color statusColor = c.is_active ? new Color(0,128,0) : Color.RED;
-                table.addCell(makeCell(c.is_active ? "Ativo" : "Inativo", statusColor, bg));
-                table.addCell(makeCell(c.worked_hours + "/" + c.fouls, bg));
-                table.addCell(makeCell(String.format("%.2fKzs", c.net_salary), bg));
+                table.addCell(makeCell(c.is_active ? "Ativo" : "Inativo", statusColor, bg, tableFont));
+                table.addCell(makeCell(c.worked_hours + "/" + c.fouls, bg, tableFont));
+                table.addCell(makeCell(String.format("%.2fKzs", c.net_salary), bg, tableFont));
                 alternate = !alternate;
             }
 
@@ -104,24 +121,52 @@ public class Report {
     }
     // Cria célula com cor de fundo e opcionalmente cor de texto
     private static PdfPCell makeCell(String text, Color bg) {
-        PdfPCell cell = new PdfPCell(new Phrase(text));
-        cell.setBackgroundColor(bg);
-        cell.setPadding(5);
-        return cell;
+        // Deprecated: use makeCell with font
+        return makeCell(text, bg, FontFactory.getFont(FontFactory.HELVETICA, 9));
     }
     private static PdfPCell makeCell(String text, Color fg, Color bg) {
-        Phrase phrase = new Phrase(text, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, fg));
-        PdfPCell cell = new PdfPCell(phrase);
+        // Deprecated: use makeCell with font
+        return makeCell(text, fg, bg, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, fg));
+
+    }
+
+    // Nova versão: célula com fonte customizada, cor de fundo e borda
+    private static PdfPCell makeCell(String text, Color bg, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
         cell.setBackgroundColor(bg);
-        cell.setPadding(5);
+        cell.setPadding(4);
+        cell.setBorderWidth(0.7f);
+        cell.setBorderColor(Color.GRAY);
+        return cell;
+    }
+    // Nova versão: célula com cor de texto, fundo, fonte customizada e borda
+    private static PdfPCell makeCell(String text, Color fg, Color bg, Font font) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setBackgroundColor(bg);
+        cell.setPadding(4);
+        cell.setBorderWidth(0.7f);
+        cell.setBorderColor(Color.GRAY);
         return cell;
     }
 
     private static void addTableHeader(PdfPTable table, String... headers) {
+        // Deprecated: use addTableHeader with font
+        addTableHeader(table, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10), headers);
+    }
+
+    // Nova versão: cabeçalho com fonte customizada, borda e cor
+    private static void addTableHeader(PdfPTable table, Font font, String... headers) {
+        // Usa fonte negrito para o header
+        Font boldFont = FontFactory.getFont("Arial", "windows-1252", true, Font.BOLD, 10f);
+        if (boldFont == null) {
+            boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10f);
+        }
         for (String header : headers) {
-            PdfPCell cell = new PdfPCell(new Phrase(header));
+            PdfPCell cell = new PdfPCell(new Phrase(header, boldFont));
             cell.setBackgroundColor(Color.LIGHT_GRAY);
             cell.setPadding(5);
+            cell.setBorderWidth(1f);
+            cell.setBorderColor(Color.DARK_GRAY);
             table.addCell(cell);
         }
     }
