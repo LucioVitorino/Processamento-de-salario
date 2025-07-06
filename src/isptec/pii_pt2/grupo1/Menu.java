@@ -36,7 +36,6 @@ public class Menu {
             System.out.println("4. Desativar Colaborador");
             System.out.println("5. Pesquisar Colaborador");
             System.out.println("6. Imprimir Colaboradores");
-            System.out.println("7. Dashboard de Colaboradores");
             System.out.println("0. Voltar ao Menu Principal");
             System.out.println("=====================================");
             System.out.print("Escolha uma opção: ");
@@ -96,9 +95,6 @@ public class Menu {
                         System.out.println();
                     }
                     pause();
-                    break;
-                case 7:
-                    showDashboard(list);
                     break;
                 case 0:
                     System.out.println("\nVoltando ao Menu Principal...\n");
