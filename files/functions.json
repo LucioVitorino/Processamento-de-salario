@@ -1,0 +1,37 @@
+[
+    {
+        "bonus": 13,
+        "name": "Programador",
+        "discount": 53,
+        "salary": 12,
+        "expected_hours": 34
+    },
+    {
+        "bonus": 12,
+        "name": "Gerente",
+        "discount": 12,
+        "salary": 12,
+        "expected_hours": 12
+    },
+    {
+        "bonus": 123,
+        "name": "Li",
+        "discount": 23,
+        "salary": 12,
+        "expected_hours": 23
+    },
+    {
+        "bonus": 35,
+        "name": "Jofre",
+        "discount": 3,
+        "salary": 23,
+        "expected_hours": 56
+    },
+    {
+        "bonus": 12,
+        "name": "Jodes",
+        "discount": 12,
+        "salary": 12,
+        "expected_hours": 12
+    }
+]

@@ -1,5 +1,6 @@
 
 package isptec.pii_pt2.grupo1;
+import static isptec.pii_pt2.grupo1.Function.functions_list;
 import static isptec.pii_pt2.grupo1.Function.get_function_by_id;
 import static isptec.pii_pt2.grupo1.Function.select_function;
 import static isptec.pii_pt2.grupo1.Utils.add_int;
@@ -14,6 +15,9 @@ import static isptec.pii_pt2.grupo1.Utils.validate_email;
 import java.util.Comparator;
 import java.nio.file.Paths;
 import static java.nio.file.Files.readAllBytes;
+import static isptec.pii_pt2.grupo1.Utils.ANSI_RED;
+import static isptec.pii_pt2.grupo1.Utils.ANSI_GREEN;
+import static isptec.pii_pt2.grupo1.Utils.ANSI_RESET;
 import org.json.JSONObject;
 import org.json.JSONArray;
 /**
@@ -22,6 +26,7 @@ import org.json.JSONArray;
  * @author jofre
  */
 public class Collaborator {
+
     int number;
     StringBuilder name = new StringBuilder();
     LocalDate birthday;
@@ -31,7 +36,6 @@ public class Collaborator {
     String Id = new String();
     LocalDate start_data;
     int worked_hours;
-    int worked_days;
     int fouls;
     int extra_hours;
     StringBuilder license;
@@ -41,54 +45,160 @@ public class Collaborator {
     public static void register_collaborator(ArrayList<Collaborator> list)
     {
         Collaborator novo = new Collaborator();
-        System.out.println("------------Dados Pessoais-----------");
+        System.out.println("============ Cadastro de Colaborador ============");
         System.out.print("Digite o nome: ");
         novo.name.append(add_name());
         novo.birthday = create_date();
         novo.email.append(create_email(list));
         System.out.println();
-        do{
-        novo.function = select_function();
-        }while(novo.function == null);
+        do {
+            novo.function = select_function();
+        } while (novo.function == null);
         System.out.println();
+        System.out.print("Informa a sua morada :");
         novo.household.append(input.nextLine());
         novo.start_data = LocalDate.now();
-        System.out.print("Informe a quantidade de horas trabalhadas: !");
+        System.out.print("Informe a quantidade de horas trabalhadas: ");
         novo.worked_hours = input.nextInt();
-        System.out.print("Informe a quantidade de horas trabalhadas: !");
-        novo.worked_days = input.nextInt();
-        System.out.print("Informe a quantidade de faltas: !");
+        System.out.print("Informe a quantidade de faltas: ");
         novo.fouls = input.nextInt();
-        
-        novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),
-                novo.start_data.getYear(), novo.birthday.getMonthValue(),list.size());
+        novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(), novo.start_data.getYear(), novo.birthday.getMonthValue(), list.size());
+        System.out.println("\nID gerado para o colaborador: [" + novo.Id + "]");
+        System.out.println("\nResumo do cadastro:");
+        System.out.println("----------------------------------------");
+        System.out.println("Nome:         " + novo.name);
+        System.out.println("Nascimento:   " + (novo.birthday != null ? novo.birthday : ""));
+        System.out.println("Email:        " + novo.email);
+        System.out.println("Função:       " + (novo.function != null ? novo.function.name : ""));
+        System.out.println("Morada:       " + novo.household);
+        System.out.println("Início:       " + (novo.start_data != null ? novo.start_data : ""));
+        System.out.println("Horas trab.:  " + novo.worked_hours);
+        System.out.println("Faltas:       " + novo.fouls);
+        System.out.println("----------------------------------------");
         list.add(novo);
+        System.out.println(ANSI_GREEN + "Colaborador cadastrado com sucesso!" + ANSI_RESET);
+        // Persist the entire list to JSON after adding a new collaborator
+        save_all_collaborators_to_json_file(list, "files/collaborators.json");
+        System.out.println("\nID gerado para o colaborador: [" + novo.Id + "]");
     }
 
     public static Collaborator read_collaborator_from_json(JSONObject json) {
         Collaborator colaborador = new Collaborator();
         colaborador.Id = json.getString("Id");
         colaborador.name.append(json.getString("name"));
-        colaborador.birthday = LocalDate.parse(json.getString("birthday"));
         colaborador.household.append(json.getString("household"));
-        colaborador.function = get_function_by_id(json.getInt("function_id"));
-        get_function_by_id(json.getInt("function_id")).colab_assigned++;
+        int funcId = json.getInt("function_id");
+        colaborador.function = get_function_by_id(funcId);
+        // Não incrementa colab_assigned aqui, só ao associar novo colaborador de fato
+        if (colaborador.function == null) {
+            System.out.println("Atenção: função com id " + funcId + " não encontrada para o colaborador " + colaborador.name + ".\nPor favor, selecione uma função válida para este colaborador.");
+            do {
+                colaborador.function = select_function();
+            } while (colaborador.function == null);
+        }
         colaborador.email.append(json.getString("email"));
-        colaborador.start_data = LocalDate.parse(json.getString("start_data"));
+
+        try {
+            colaborador.birthday = LocalDate.parse(json.getString("birthday"));
+        } catch (Exception e) {
+            colaborador.birthday = null;
+        }
+        try {
+            colaborador.start_data = LocalDate.parse(json.getString("start_data"));
+        } catch (Exception e) {
+            colaborador.start_data = LocalDate.now();
+        }
         colaborador.is_active = json.getBoolean("is_active");
         return colaborador;
     }
     
-    public static void read_collaborators_from_json_file(ArrayList<Collaborator> list, String filePath){
+    public static void read_collaborators_from_json_file(ArrayList<Collaborator> list, String filePath) {
+        boolean erro = false;
+        boolean atualizado = false;
+        // Zera a contagem de colab_assigned de todas as funções antes de ler
+        ArrayList<Function> allFunctions = functions_list;
+        if (allFunctions != null) {
+            for (Function f : allFunctions) {
+                f.colab_assigned = 0;
+            }
+        }
         try {
             String content = new String(readAllBytes(Paths.get(filePath)));
-           JSONArray jsonArray = new JSONArray(content);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Collaborator colaborador = read_collaborator_from_json(jsonObject);
-                list.add(colaborador);
+            JSONArray jsonArray = new JSONArray(content);
+            if (jsonArray.length() == 0) {
+                System.out.println("Não existem colaboradores cadastrados.");
+                return;
             }
-        } catch (java.io.IOException e) {
+            int before = list.size();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Collaborator colaborador = read_collaborator_from_json(jsonObject);
+                    // Atualiza ou adiciona colaborador na lista
+                    boolean exists = false;
+                    for (Collaborator c : list) {
+                        if (c.Id.equals(colaborador.Id)) {
+                            // Se a função mudou, decrementa da antiga e incrementa na nova
+                            if (c.function != null && colaborador.function != null && c.function.id != colaborador.function.id) {
+                                c.function.colab_assigned--;
+                                colaborador.function.colab_assigned++;
+                            }
+                            // Atualiza todos os campos relevantes do colaborador existente
+                            c.name.setLength(0);
+                            c.name.append(colaborador.name);
+                            c.household.setLength(0);
+                            c.household.append(colaborador.household);
+                            c.birthday = colaborador.birthday;
+                            c.function = colaborador.function;
+                            c.email.setLength(0);
+                            c.email.append(colaborador.email);
+                            c.start_data = colaborador.start_data;
+                            c.is_active = colaborador.is_active;
+                            exists = true;
+                            atualizado = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {
+                        list.add(colaborador);
+                        // Só incrementa colab_assigned ao adicionar novo colaborador
+                        if (colaborador.function != null) {
+                            colaborador.function.colab_assigned++;
+                        }
+                        atualizado = true;
+                    }
+                } catch (Exception ex) {
+                    erro = true;
+                    System.out.println("Erro ao processar colaborador do JSON: " + ex.getMessage());
+                }
+            }
+            if (atualizado) {
+                // Atualiza o arquivo JSON com a lista atualizada
+                JSONArray novoArray = new JSONArray();
+                for (Collaborator c : list) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("Id", c.Id);
+                    obj.put("name", c.name.toString());
+                    obj.put("birthday", c.birthday != null ? c.birthday.toString() : "");
+                    obj.put("household", c.household.toString());
+                    obj.put("function_id", c.function != null ? c.function.id : 0);
+                    obj.put("email", c.email.toString());
+                    obj.put("start_data", c.start_data != null ? c.start_data.toString() : "");
+                    obj.put("is_active", c.is_active);
+                    novoArray.put(obj);
+                }
+                try {
+                    java.nio.file.Files.write(Paths.get(filePath), novoArray.toString(4).getBytes());
+                } catch (Exception e) {
+                    System.out.println("Erro ao atualizar o arquivo JSON de colaboradores: " + e.getMessage());
+                }
+            }
+            if (!erro && list.size() > before) {
+                System.out.println(ANSI_GREEN + "Colaboradores lidos com sucesso!" + ANSI_RESET);
+            }
+        } catch (java.nio.file.NoSuchFileException e) {
+            System.out.println("Não existem colaboradores cadastrados, precisa criar manualmente.");
+        } catch (Exception e) {
             System.out.println("Erro ao ler o arquivo JSON: " + e.getMessage());
         }
     }
@@ -105,7 +215,7 @@ public class Collaborator {
         data = input.next();
         input.nextLine();
         date = LocalDate.parse(data, formato);
-        
+            
         }catch(DateTimeParseException e)
         {
             System.out.print("Erro de fomatação de data !");
@@ -132,34 +242,41 @@ public class Collaborator {
             int index = search_collaborator(list, Id);
             if(index != -1){
                 list.get(index).is_active = false;
-                System.out.print(list.get(index).name + " desativado com Sucesso!");
+                System.out.print(ANSI_GREEN + list.get(index).name + " desativado com Sucesso!" + ANSI_RESET);
                 return ;
             }
             else
-                System.out.println("Não existe nenhum colaborador com este id!");
+                System.out.println(ANSI_RED + "Não existe nenhum colaborador com este id!" +ANSI_RESET);
     }
     
-    public static void print_collaborator(Collaborator item)
-    {
-        System.out.println("-----"+item.Id+"-----");
-        System.out.println("1 - Nome: " + item.name);
-        System.out.println("2 - Data de Aniversário: " + item.birthday.getDayOfMonth() + "/" 
-                + item.birthday.getMonthValue() + "/" + item.birthday.getYear());
-        System.out.println("3 - Morada: " + item.household);
-        System.out.println("4 - Função: " + item.function.name);
-        System.out.println("5 - Email: " + item.email);
-        System.out.println("6 - Data de Início: " + item.start_data.getDayOfMonth() + "/" 
-                + item.start_data.getMonthValue() + "/" + item.start_data.getYear());
-        System.out.println("7 - Status: " + (item.is_active ? "Activo" : "Inactivo"));
-        System.out.println("8 - Tempo de trabalho mensal: "+item.worked_days+" dias /"+item.worked_hours+"horas");
+    public static void print_collaborator(Collaborator item) {
+        String status = item.is_active ? "Ativo" : "Inativo";
+        System.out.println(String.format(
+            "| %-12s | %-20s | %-10s | %-15s | %-15s | %-25s | %-8s | %-7s | %-8s |",
+            item.Id,
+            item.name,
+            item.birthday != null ? item.birthday : "",
+            item.household,
+            item.function != null ? item.function.name : "",
+            item.email,
+            item.start_data != null ? item.start_data : "",
+            status,
+            item.worked_hours + "h"
+        ));
     }
-    public static void list_collaborators(ArrayList<Collaborator> list)
-    {
-        for(Collaborator item : list)
-        {
-            if(item.is_active)
+
+    public static void list_collaborators(ArrayList<Collaborator> list) {
+        // Cabeçalho
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println(String.format(
+            "| %-12s | %-20s | %-10s | %-15s | %-15s | %-25s | %-8s | %-7s | %-8s |",
+            "ID", "Nome", "Nascimento", "Morada", "Função", "Email", "Início", "Status", "Horas"));
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------");
+        for (Collaborator item : list) {
+            if (item.is_active)
                 print_collaborator(item);
         }
+        System.out.println("-------------------------------------------------------------------------------------------------------------------------------");
     }
     public static int search_collaborator(ArrayList<Collaborator> list, String Id) {
         if (list == null || list.isEmpty())
@@ -182,86 +299,121 @@ public class Collaborator {
         }
         return -1;
     }
-    
-    public static void  update_collaborator(ArrayList<Collaborator> list)
-    {
-       System.out.print("Informe o ID do colaborador : ");
-       int index = search_collaborator(list, input.next());
-       input.nextLine();
-       if(index == -1)
-       {
-           System.out.println("Colaborador inexistente");
-              return;
-       }
-  
-       int opc = 0;
-       do{
-       print_collaborator(list.get(index));
-       System.out.println("0 - Sair");
-       System.out.println("Qual informação deseja actualizar ? : ");
-       opc = add_int();
-       
-       switch(opc){
-           case 1:
-               list.get(index).name.setLength(0);
-               list.get(index).name.append(add_name());
-               System.out.println("Nome actualizado com sucesso !");
-               break;
-           case 2:
-               list.get(index).birthday = create_date();
-               System.out.println("Data de aniversário actualizado com sucesso !");
-               break;
-           case 3:
-                list.get(index).household.setLength(0);
-               list.get(index).household.append(input.nextLine());
-               System.out.println("Morada actualizado com sucesso !");
-               break;
-           case 4:
-               list.get(index).function = select_function();
-               System.out.println("função actualizado com sucesso !");
-               break;
-           case 5:
-               list.get(index).email.setLength(0);
-               list.get(index).email.append(create_email(list));
-               System.out.println("Email actualizado com sucesso !");
-               break;
-           case 6:
-               list.get(index).start_data = create_date();
-               System.out.println("Data de inicio actualizado com sucesso !");
-               break;
-           case 7:
-               if(list.get(index).is_active)
-                   list.get(index).is_active = false;
-               else
-                   list.get(index).is_active = true;
-                System.out.println("Status actualizado com sucesso !");
-           case 8:
-               System.out.print("Informe a quantidade de horas trabalhadas: !");
-               list.get(index).worked_hours = input.nextInt();
-               System.out.print("Informe a quantidade de horas trabalhadas: !");
-               list.get(index).worked_days = input.nextInt();
-               break;
-           case 0:
-               break;
-           default:System.out.println("Digite uma Opção válida!");
-        } 
-       }while(opc != 0);
+    public static void update_collaborator(ArrayList<Collaborator> list) {
+        System.out.print("Informe o ID do colaborador : ");
+        String id = input.next();
+        input.nextLine();
+        int index = search_collaborator(list, id);
+        if (index == -1) {
+            System.out.println(ANSI_RED + "Colaborador inexistente" +ANSI_RESET);
+            return;
+        }
+
+        int opc = 0;
+        boolean updated = false;
+        do {
+            print_collaborator(list.get(index));
+            System.out.println("0 - Sair");
+            System.out.println("Qual informação deseja actualizar ? : ");
+            opc = add_int();
+
+            switch (opc) {
+                case 1:
+                    System.out.println("Digite o novo nome: ");
+                    list.get(index).name.setLength(0);
+                    list.get(index).name.append(add_name());
+                    System.out.println(ANSI_GREEN + "Nome actualizado com sucesso !" + ANSI_RESET);
+                    updated = true;
+                    break;
+                case 2:
+                    System.out.println("Data de aniversário (dd/MM/yyyy): ");
+                    list.get(index).birthday = create_date();
+                    System.out.println(ANSI_GREEN + "Data de aniversário actualizado com sucesso !" + ANSI_RESET);
+                    updated = true;
+                    break;
+                case 3:
+                    System.out.print("Digite a nova morada: ");
+                    list.get(index).household.setLength(0);
+                    list.get(index).household.append(input.nextLine());
+                    System.out.println(ANSI_GREEN + "Morada actualizado com sucesso !" + ANSI_RESET);
+                    updated = true;
+                    break;
+                case 4:
+                    list.get(index).function.colab_assigned--;
+                    list.get(index).function = select_function();
+                    System.out.println(ANSI_GREEN + "função actualizado com sucesso !" + ANSI_RESET);
+                    updated = true;
+                    break;
+                case 5:
+                    System.out.print("Digite o novo email: ");
+                    list.get(index).email.setLength(0);
+                    list.get(index).email.append(create_email(list));
+                    System.out.println(ANSI_GREEN + "Email actualizado com sucesso !" + ANSI_RESET);
+                    updated = true;
+                    break;
+                case 6:
+                    System.out.println("Data de início (dd/MM/yyyy): ");
+                    list.get(index).start_data = create_date();
+                    System.out.println(ANSI_GREEN + "Data de inicio actualizado com sucesso !" + ANSI_RESET);
+                    updated = true;
+                    break;
+                case 7:
+                    list.get(index).is_active = !list.get(index).is_active;
+                    System.out.println(ANSI_GREEN + "Status actualizado com sucesso !" + ANSI_RESET);
+                    updated = true;
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println(ANSI_RED + "Digite uma Opção válida!" + ANSI_RESET);
+            }
+        } while (opc != 0);
+
+        if (updated) {
+            save_all_collaborators_to_json_file(list, "files/collaborators.json");
+        }
+    }
+
+    // Salva toda a lista de colaboradores no arquivo JSON (atualização robusta)
+    public static void save_all_collaborators_to_json_file(ArrayList<Collaborator> list, String filePath) {
+        JSONArray jsonArray = new JSONArray();
+        for (Collaborator c : list) {
+            JSONObject obj = new JSONObject();
+            obj.put("Id", c.Id);
+            obj.put("name", c.name.toString());
+            obj.put("birthday", c.birthday != null ? c.birthday.toString() : "");
+            obj.put("household", c.household.toString());
+            obj.put("function_id", c.function != null ? c.function.id : 0);
+            obj.put("email", c.email.toString());
+            obj.put("start_data", c.start_data != null ? c.start_data.toString() : "");
+            obj.put("is_active", c.is_active);
+            jsonArray.put(obj);
+        }
+        try {
+            java.nio.file.Files.write(Paths.get(filePath), jsonArray.toString(4).getBytes());
+        } catch (java.io.IOException e) {
+            System.out.println(ANSI_RED + "Erro ao salvar o arquivo JSON de colaboradores: " + e.getMessage() + ANSI_RESET);
+        }
     }
     public static void generate_salary(ArrayList<Collaborator> list)
     {
+        if (list.isEmpty()) {
+            System.out.println(ANSI_RED + "Não existem colaboradores cadastrados." + ANSI_RESET);
+            return;
+        }
+        double desconto_hora = 0;
         for(Collaborator item : list)
         {
-            while (item.worked_hours >= item.worked_days * 24)
-            {
-                System.out.println("Horas trabalhas e dias trabalhados não batem cert!");
-                System.out.println("Ide do colaborador : "+item.Id);
-                System.out.println("Escolha a 8 para actualizar as horas e os dias trabalhados");
-                update_collaborator(list);
-            }
-            if (item.worked_hours > item.function.expected_hours)
-                  item.extra_hours = item.worked_hours - item.function.expected_hours;
-            item.net_salary = (item.function.salary * (item.worked_hours + item.extra_hours));
-            item.net_salary -= item.fouls  * item.function.absent_discount;
+            int horas_extras = item.worked_hours - item.function.expected_hours;
+            if (horas_extras < 0)
+               desconto_hora = (horas_extras * item.function.salary*0.02); 
+            else
+               desconto_hora = (horas_extras * item.function.salary*0.002);
+            item.net_salary = item.function.salary + desconto_hora
+                    - (item.function.absent_discount * item.fouls) + item.function.bonus; 
         }
+        System.out.println(ANSI_GREEN + "Salários Gerados com sucesso!" + ANSI_RESET);
     }
+    // Remove método duplicado e problemático save_new_collaborator_to_json_file
+    
 }   
