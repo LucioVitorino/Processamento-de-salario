@@ -177,6 +177,7 @@ public class Menu {
                 break;
             case 4:
                 generate_salary(list);
+                break;
             case 0:
                 System.out.println("Saindo...");
                 System.exit(0);

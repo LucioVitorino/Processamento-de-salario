@@ -31,7 +31,6 @@ public class Collaborator {
     String Id = new String();
     LocalDate start_data;
     int worked_hours;
-    int worked_days;
     int fouls;
     int extra_hours;
     StringBuilder license;
@@ -51,18 +50,17 @@ public class Collaborator {
         novo.function = select_function();
         }while(novo.function == null);
         System.out.println();
+        System.out.print("Informa a sua morada :");
         novo.household.append(input.nextLine());
         novo.start_data = LocalDate.now();
-        System.out.print("Informe a quantidade de horas trabalhadas: !");
+        System.out.print("Informe a quantidade de horas trabalhadas: ");
         novo.worked_hours = input.nextInt();
-        System.out.print("Informe a quantidade de horas trabalhadas: !");
-        novo.worked_days = input.nextInt();
-        System.out.print("Informe a quantidade de faltas: !");
+        System.out.print("Informe a quantidade de faltas: ");
         novo.fouls = input.nextInt();
-        
         novo.Id = gerador_id(novo.name.toString(), novo.birthday.getDayOfMonth(),
                 novo.start_data.getYear(), novo.birthday.getMonthValue(),list.size());
         list.add(novo);
+        System.out.println("Colaborador cadastrado com sucesso");
     }
 
     public static Collaborator read_collaborator_from_json(JSONObject json) {
@@ -105,7 +103,7 @@ public class Collaborator {
         data = input.next();
         input.nextLine();
         date = LocalDate.parse(data, formato);
-        
+            
         }catch(DateTimeParseException e)
         {
             System.out.print("Erro de fomatação de data !");
@@ -151,7 +149,7 @@ public class Collaborator {
         System.out.println("6 - Data de Início: " + item.start_data.getDayOfMonth() + "/" 
                 + item.start_data.getMonthValue() + "/" + item.start_data.getYear());
         System.out.println("7 - Status: " + (item.is_active ? "Activo" : "Inactivo"));
-        System.out.println("8 - Tempo de trabalho mensal: "+item.worked_days+" dias /"+item.worked_hours+"horas");
+        System.out.println("8 - Tempo de trabalho mensal: "+item.worked_hours+"horas");
     }
     public static void list_collaborators(ArrayList<Collaborator> list)
     {
@@ -235,12 +233,7 @@ public class Collaborator {
                else
                    list.get(index).is_active = true;
                 System.out.println("Status actualizado com sucesso !");
-           case 8:
-               System.out.print("Informe a quantidade de horas trabalhadas: !");
-               list.get(index).worked_hours = input.nextInt();
-               System.out.print("Informe a quantidade de horas trabalhadas: !");
-               list.get(index).worked_days = input.nextInt();
-               break;
+                break;
            case 0:
                break;
            default:System.out.println("Digite uma Opção válida!");
@@ -249,19 +242,17 @@ public class Collaborator {
     }
     public static void generate_salary(ArrayList<Collaborator> list)
     {
+        double desconto_hora = 0;
         for(Collaborator item : list)
         {
-            while (item.worked_hours >= item.worked_days * 24)
-            {
-                System.out.println("Horas trabalhas e dias trabalhados não batem cert!");
-                System.out.println("Ide do colaborador : "+item.Id);
-                System.out.println("Escolha a 8 para actualizar as horas e os dias trabalhados");
-                update_collaborator(list);
-            }
-            if (item.worked_hours > item.function.expected_hours)
-                  item.extra_hours = item.worked_hours - item.function.expected_hours;
-            item.net_salary = (item.function.salary * (item.worked_hours + item.extra_hours));
-            item.net_salary -= item.fouls  * item.function.absent_discount;
+            int horas_extras = item.worked_hours - item.function.expected_hours;
+            if (horas_extras < 0)
+               desconto_hora = (horas_extras * item.function.salary*0.02); 
+            else
+               desconto_hora = (horas_extras * item.function.salary*0.002);
+            item.net_salary = item.function.salary + desconto_hora
+                    - (item.function.absent_discount * item.fouls) + item.function.bonus; 
         }
+        System.out.println("Salários Gerados com sucesso!");
     }
 }   

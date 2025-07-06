@@ -152,12 +152,12 @@ public class Function {
                 }
                 double salary = jsonObject.getDouble("salary");
                 double bonus = jsonObject.getDouble("bonus");
-               create_function(name, salary, bonus,);
+                double discount = jsonObject.getDouble("Desconto");
+                int expectativa = jsonObject.getInt("horas esperadas");
+               create_function(name, salary, bonus,discount, expectativa);
             }
         } catch (Exception e) {
             System.out.println("Erro ao ler o arquivo JSON: " + e.getMessage());
         }
     }
-    
-
 }
