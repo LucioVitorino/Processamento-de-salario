@@ -251,7 +251,7 @@ public class Collaborator {
     
     public static void print_collaborator(Collaborator item) {
         String status = item.is_active ? ANSI_GREEN + "Ativo" + ANSI_RESET : ANSI_RED + "Inativo" + ANSI_RESET;
-        String salario = item.net_salary > 0 ? String.format("%.2f Kzs", item.net_salary) : "N/A";
+        String salario = item.net_salary > 0 ? String.format("%.0f Kzs", item.net_salary) : "Pendente";
         
         System.out.printf("│ %-8s │ %-18s │ %-10s │ %-12s │ %-15s │ %-9s │ %-6s │ %-10s │%n",
             item.Id,
@@ -452,18 +452,45 @@ public class Collaborator {
             System.out.println(ANSI_RED + "Não existem colaboradores cadastrados." + ANSI_RESET);
             return;
         }
-        double desconto_hora = 0;
+        
+        System.out.println("\n" + ANSI_GREEN + "Calculando salários..." + ANSI_RESET);
+        
         for(Collaborator item : list)
         {
+            if (item.function == null) continue;
+            
+            // Cálculo de horas extras/faltantes
             int horas_extras = item.worked_hours - item.function.expected_hours;
-            if (horas_extras < 0)
-               desconto_hora = (horas_extras * item.function.salary*0.02); 
-            else
-               desconto_hora = (horas_extras * item.function.salary*0.002);
-            item.net_salary = item.function.salary + desconto_hora
-                    - (item.function.absent_discount * item.fouls) + item.function.bonus; 
+            double ajuste_horas = 0;
+            
+            if (horas_extras < 0) {
+                // Desconto por horas faltantes (2% por hora)
+                ajuste_horas = horas_extras * item.function.salary * 0.02;
+            } else {
+                // Bônus por horas extras (0.2% por hora)
+                ajuste_horas = horas_extras * item.function.salary * 0.002;
+            }
+            
+            // Desconto por faltas
+            double desconto_faltas = item.function.absent_discount * item.fouls;
+            
+            // Cálculo do salário líquido
+            double salario_bruto = item.function.salary + item.function.bonus;
+            item.net_salary = salario_bruto + ajuste_horas - desconto_faltas;
+            
+            // GARANTIR QUE O SALÁRIO NUNCA SEJA NEGATIVO
+            // Salário mínimo = 30% do salário base
+            double salario_minimo = item.function.salary * 0.3;
+            if (item.net_salary < salario_minimo) {
+                item.net_salary = salario_minimo;
+                System.out.println(ANSI_RED + "[AVISO] Salário de " + item.name + " ajustado para salário mínimo: " + 
+                                 String.format("%.2f Kzs", salario_minimo) + ANSI_RESET);
+            }
         }
-        System.out.println(ANSI_GREEN + "Salários Gerados com sucesso!" + ANSI_RESET);
+        
+        // Salvar os salários calculados
+        save_all_collaborators_to_json_file(list, "files/collaborators.json");
+        System.out.println(ANSI_GREEN + "Salários calculados e salvos com sucesso!" + ANSI_RESET);
     }
     // Método auxiliar para truncar strings longas
     private static String truncateString(String str, int maxLength) {

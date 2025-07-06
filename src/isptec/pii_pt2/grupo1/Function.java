@@ -207,6 +207,10 @@ public class Function {
     public static void read_functions_from_json_file(String filePath) {
         try {
             String content = new String(readAllBytes(Paths.get(filePath)));
+            if (content.trim().isEmpty()) {
+                System.out.println(ANSI_RED + "Arquivo de funções vazio." + ANSI_RESET);
+                return;
+            }
             JSONArray jsonArray = new JSONArray(content);
             if (jsonArray.length() == 0) {
                 System.out.println(ANSI_RED + "Não existem funções cadastradas." + ANSI_RESET);
@@ -242,7 +246,9 @@ public class Function {
                 System.out.println(ANSI_GREEN + "Funções lidas com sucesso!" + ANSI_RESET);
             }
         } catch (java.nio.file.NoSuchFileException e) {
-            System.out.println(ANSI_RED + "Não existem funções cadastradas, precisa criar manualmente." + ANSI_RESET);
+            System.out.println(ANSI_RED + "Arquivo de funções não encontrado, precisa criar manualmente." + ANSI_RESET);
+        } catch (org.json.JSONException e) {
+            System.out.println(ANSI_RED + "Arquivo JSON de funções corrompido: " + e.getMessage() + ANSI_RESET);
         } catch (Exception e) {
             System.out.println(ANSI_RED + "Erro ao ler o arquivo JSON: " + e.getMessage() + ANSI_RESET);
         }
@@ -253,9 +259,16 @@ public class Function {
         JSONArray jsonArray = new JSONArray();
         try {
             String content = new String(readAllBytes(Paths.get(filePath)));
-            jsonArray = new JSONArray(content);
+            if (content.trim().isEmpty()) {
+                jsonArray = new JSONArray();
+            } else {
+                jsonArray = new JSONArray(content);
+            }
         } catch (java.io.IOException e) {
-          System.out.println(ANSI_GREEN + "Criando novo arquivo JSON." + ANSI_RESET);
+            System.out.println(ANSI_GREEN + "Criando novo arquivo JSON." + ANSI_RESET);
+        } catch (org.json.JSONException e) {
+            System.out.println(ANSI_RED + "Arquivo JSON corrompido, criando novo." + ANSI_RESET);
+            jsonArray = new JSONArray();
         }
         // Create a new JSONObject for the function
         JSONObject jsonObject = new JSONObject();
