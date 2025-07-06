@@ -60,9 +60,9 @@ public class Report {
 
 
             // Fonte Arial (ou Helvetica se não disponível)
-            Font tableFont = FontFactory.getFont("Arial", "windows-1252", true, 9);
+            Font tableFont = FontFactory.getFont("Arial", "windows-1252", 9f);
             if (tableFont == null) {
-                tableFont = FontFactory.getFont(FontFactory.HELVETICA, 9);
+                tableFont = FontFactory.getFont(FontFactory.HELVETICA, 9f);
             }
 
             PdfPTable table = new PdfPTable(10); // 10 colunas
@@ -157,7 +157,7 @@ public class Report {
     // Nova versão: cabeçalho com fonte customizada, borda e cor
     private static void addTableHeader(PdfPTable table, Font font, String... headers) {
         // Usa fonte negrito para o header
-        Font boldFont = FontFactory.getFont("Arial", "windows-1252", true, Font.BOLD, 10f);
+        Font boldFont = FontFactory.getFont("Arial", "windows-1252", 10f, Font.BOLD);
         if (boldFont == null) {
             boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10f);
         }
