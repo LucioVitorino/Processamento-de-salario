@@ -186,8 +186,8 @@ public class Menu {
             System.out.println("========= MENU ================");
             System.out.println("1. Colaboradores");
             System.out.println("2. Funções");
-            System.out.println("3. Gerir Relatório");
-            System.out.println("4. Gerar Salário");
+            System.out.println("3. Gerar Salário");
+            System.out.println("4. Gerir Relatório");
             System.out.println("0. Sair");
             System.out.println("================================");
             System.out.print("Escolha uma opção: ");
@@ -199,10 +199,10 @@ public class Menu {
                 case 2:
                     menu_function();
                     break;
-                case 3:
+                case 4:
                     menu_report(list);
                     break;
-                case 4:
+                case 3:
                     generate_salary(list);
                     pause();
                     break;

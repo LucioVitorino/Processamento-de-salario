@@ -71,7 +71,7 @@ public class Report {
                 Color statusColor = c.is_active ? new Color(0,128,0) : Color.RED;
                 table.addCell(makeCell(c.is_active ? "Ativo" : "Inativo", statusColor, bg));
                 table.addCell(makeCell(c.worked_hours + "/" + c.fouls, bg));
-                table.addCell(makeCell(String.format("%.2f", c.net_salary), bg));
+                table.addCell(makeCell(String.format("%.2fKzs", c.net_salary), bg));
                 alternate = !alternate;
             }
 
