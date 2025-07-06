@@ -31,87 +31,82 @@ public class Report {
             return;
         }
 
-        Document pdf = new Document(PageSize.A4);
+        Document pdf = new Document(PageSize.A4, 40, 40, 50, 50); // Margens elegantes
         try {
             String caminho = "files/Relatorio_de_Colaboradores.pdf";
             PdfWriter.getInstance(pdf, new FileOutputStream(caminho));
             pdf.open();
 
-            // Metadados
-            pdf.addTitle("Relatório de Colaboradores");
-            pdf.addAuthor("Departamento RH");
+            // Metadados aprimorados
+            pdf.addTitle("Relatório Executivo de Colaboradores - LJK Corp");
+            pdf.addAuthor("Departamento de Recursos Humanos");
+            pdf.addSubject("Relatório Mensal de Colaboradores");
+            pdf.addKeywords("RH, Colaboradores, Relatório, LJK");
             pdf.addCreationDate();
 
-            // Cabeçalho visual
-            Paragraph titulo = new Paragraph("EMPRESA LJK, Corp.", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, Color.BLUE));
-            titulo.setAlignment(Element.ALIGN_CENTER);
-            pdf.add(titulo);
-            Paragraph subtitulo = new Paragraph("Departamento de Recursos Humanos", FontFactory.getFont(FontFactory.HELVETICA, 13, Color.DARK_GRAY));
-            subtitulo.setAlignment(Element.ALIGN_CENTER);
-            pdf.add(subtitulo);
-            pdf.add(new Paragraph("Data: " + LocalDate.now()));
-            pdf.add(Chunk.NEWLINE);
-            Paragraph assunto = new Paragraph("Assunto: Relatório de Colaboradores", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14));
-            assunto.setAlignment(Element.ALIGN_CENTER);
-            pdf.add(assunto);
-            pdf.add(Chunk.NEWLINE);
-            pdf.add(new Paragraph("Este relatório apresenta os colaboradores da empresa LJK, Corp."));
+            // Cabeçalho elegante com gradiente visual
+            createHeader(pdf);
+            
+            // Linha decorativa
+            pdf.add(createSeparatorLine());
             pdf.add(Chunk.NEWLINE);
 
 
-            // Fonte Arial (ou Helvetica se não disponível)
-            Font tableFont = FontFactory.getFont("Arial", "windows-1252", 9f);
-            if (tableFont == null) {
-                tableFont = FontFactory.getFont(FontFactory.HELVETICA, 9f);
-            }
-
-            PdfPTable table = new PdfPTable(10); // 10 colunas
+            // Estatísticas resumidas antes da tabela
+            createSummarySection(pdf, list);
+            pdf.add(Chunk.NEWLINE);
+            
+            // Tabela principal otimizada (8 colunas)
+            Font tableFont = FontFactory.getFont(FontFactory.HELVETICA, 10f);
+            PdfPTable table = new PdfPTable(8);
             table.setWidthPercentage(100);
-            table.setSpacingBefore(10f);
-            table.setSpacingAfter(10f);
+            table.setSpacingBefore(15f);
+            table.setSpacingAfter(15f);
+            
+            // Definir larguras das colunas para melhor layout
+            float[] columnWidths = {8f, 20f, 12f, 15f, 15f, 10f, 8f, 12f};
+            table.setWidths(columnWidths);
 
-            // Cabeçalhos da tabela
-            addTableHeader(table, tableFont, "ID", "Nome", "Nascimento", "Email", "Função", "Morada", "Início", "Status", "Horas/Faltas", "Salário Mensal");
+            // Cabeçalho elegante da tabela
+            addElegantTableHeader(table, "ID", "Nome", "Nascimento", "Função", "Email", "Início", "Status", "Salário");
 
-            // Dados com linhas alternadas e cores para status
-            boolean alternate = false;
+            // Dados com design aprimorado
+            int rowCount = 0;
             for (Collaborator c : list) {
-                Color bg = alternate ? new Color(240,240,255) : Color.WHITE;
-                table.addCell(makeCell(String.valueOf(c.Id), bg, tableFont));
-                table.addCell(makeCell(String.valueOf(c.name), bg, tableFont));
-                table.addCell(makeCell(c.birthday != null ? c.birthday.toString() : "", bg, tableFont));
-                table.addCell(makeCell(String.valueOf(c.email), bg, tableFont));
-                table.addCell(makeCell(c.function != null ? String.valueOf(c.function.name) : "", bg, tableFont));
-                table.addCell(makeCell(String.valueOf(c.household), bg, tableFont));
-                table.addCell(makeCell(c.start_data != null ? c.start_data.toString() : "", bg, tableFont));
-                // Status colorido
-                Color statusColor = c.is_active ? new Color(0,128,0) : Color.RED;
-                table.addCell(makeCell(c.is_active ? "Ativo" : "Inativo", statusColor, bg, tableFont));
-                table.addCell(makeCell(c.worked_hours + "/" + c.fouls, bg, tableFont));
-                table.addCell(makeCell(String.format("%.2fKzs", c.net_salary), bg, tableFont));
-                alternate = !alternate;
+                Color bg = (rowCount % 2 == 0) ? new Color(248, 249, 250) : Color.WHITE;
+                
+                table.addCell(createStyledCell(c.Id, bg, tableFont, Element.ALIGN_CENTER));
+                table.addCell(createStyledCell(truncateText(c.name.toString(), 18), bg, tableFont, Element.ALIGN_LEFT));
+                table.addCell(createStyledCell(formatDate(c.birthday), bg, tableFont, Element.ALIGN_CENTER));
+                table.addCell(createStyledCell(c.function != null ? truncateText(c.function.name.toString(), 12) : "N/A", bg, tableFont, Element.ALIGN_LEFT));
+                table.addCell(createStyledCell(truncateText(c.email.toString(), 15), bg, tableFont, Element.ALIGN_LEFT));
+                table.addCell(createStyledCell(formatDate(c.start_data), bg, tableFont, Element.ALIGN_CENTER));
+                
+                // Status com cor especial
+                Color statusBg = c.is_active ? new Color(220, 255, 220) : new Color(255, 220, 220);
+                Color statusText = c.is_active ? new Color(0, 100, 0) : new Color(150, 0, 0);
+                table.addCell(createStatusCell(c.is_active ? "Ativo" : "Inativo", statusBg, statusText));
+                
+                table.addCell(createStyledCell(String.format("%.0f Kzs", c.net_salary), bg, tableFont, Element.ALIGN_RIGHT));
+                rowCount++;
             }
 
             pdf.add(table);
+            
+            // Seção de análise detalhada
+            createAnalysisSection(pdf, list);
+            
+            // Rodapé elegante
+            createFooter(pdf);
 
-            int total = list.size();
-            long ativos = list.stream().filter(c -> c.is_active).count();
-            pdf.add(new Paragraph("Resumo do Quadro de Colaboradores", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 13)));
-            pdf.add(new Paragraph("Total: " + total, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12)));
-            pdf.add(new Paragraph("Ativos: " + ativos, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.GREEN)));
-            pdf.add(new Paragraph("Inativos: " + (total - ativos), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, Color.RED)));
-
-            pdf.add(Chunk.NEWLINE);
-            Paragraph assinatura = new Paragraph("O DIRECTOR \n __________________");
-            assinatura.setAlignment(Element.ALIGN_CENTER);
-            pdf.add(Chunk.NEWLINE);
-            pdf.add(Chunk.NEWLINE);
-            pdf.add(assinatura);
-
-            System.out.println(isptec.pii_pt2.grupo1.Utils.ANSI_GREEN + "PDF gerado com sucesso." + isptec.pii_pt2.grupo1.Utils.ANSI_RESET);
-            if (Desktop.isDesktopSupported()) 
+            System.out.println(isptec.pii_pt2.grupo1.Utils.ANSI_GREEN + "✓ Relatório PDF gerado com sucesso!" + isptec.pii_pt2.grupo1.Utils.ANSI_RESET);
+            System.out.println("📄 Arquivo salvo em: " + caminho);
+            if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(new File(caminho));
-            System.out.println("Acesse a página files do seu arquivo para a visualização!");
+                System.out.println("🚀 Abrindo relatório automaticamente...");
+            } else {
+                System.out.println("📁 Acesse a pasta 'files' para visualizar o relatório.");
+            }
 
         } catch (DocumentException | IOException e) {
             System.err.println(isptec.pii_pt2.grupo1.Utils.ANSI_RED + "Erro ao gerar PDF: " + e.getMessage() + isptec.pii_pt2.grupo1.Utils.ANSI_RESET);
@@ -119,55 +114,184 @@ public class Report {
             pdf.close();
         }
     }
-    // Cria célula com cor de fundo e opcionalmente cor de texto
-    private static PdfPCell makeCell(String text, Color bg) {
-        // Deprecated: use makeCell with font
-        return makeCell(text, bg, FontFactory.getFont(FontFactory.HELVETICA, 9));
+    // Métodos auxiliares para design elegante
+    private static void createHeader(Document pdf) throws DocumentException {
+        // Título principal
+        Paragraph titulo = new Paragraph("EMPRESA LJK, Corp.", 
+            FontFactory.getFont(FontFactory.HELVETICA_BOLD, 24, new Color(41, 128, 185)));
+        titulo.setAlignment(Element.ALIGN_CENTER);
+        titulo.setSpacingAfter(5f);
+        pdf.add(titulo);
+        
+        // Subtítulo
+        Paragraph subtitulo = new Paragraph("Departamento de Recursos Humanos", 
+            FontFactory.getFont(FontFactory.HELVETICA, 14, new Color(127, 140, 141)));
+        subtitulo.setAlignment(Element.ALIGN_CENTER);
+        subtitulo.setSpacingAfter(10f);
+        pdf.add(subtitulo);
+        
+        // Data e assunto
+        Paragraph dataAssunto = new Paragraph(
+            "Relatório de Colaboradores - " + formatCurrentDate(),
+            FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, new Color(52, 73, 94)));
+        dataAssunto.setAlignment(Element.ALIGN_CENTER);
+        dataAssunto.setSpacingAfter(15f);
+        pdf.add(dataAssunto);
     }
-    private static PdfPCell makeCell(String text, Color fg, Color bg) {
-        // Deprecated: use makeCell with font
-        return makeCell(text, fg, bg, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, fg));
-
+    
+    private static Paragraph createSeparatorLine() {
+        Paragraph line = new Paragraph("_".repeat(80), 
+            FontFactory.getFont(FontFactory.HELVETICA, 8, new Color(189, 195, 199)));
+        line.setAlignment(Element.ALIGN_CENTER);
+        return line;
     }
-
-    // Nova versão: célula com fonte customizada, cor de fundo e borda
-    private static PdfPCell makeCell(String text, Color bg, Font font) {
-        PdfPCell cell = new PdfPCell(new Phrase(text, font));
-        cell.setBackgroundColor(bg);
-        cell.setPadding(4);
-        cell.setBorderWidth(0.7f);
-        cell.setBorderColor(Color.GRAY);
+    
+    private static void createSummarySection(Document pdf, ArrayList<Collaborator> list) throws DocumentException {
+        int total = list.size();
+        long ativos = list.stream().filter(c -> c.is_active).count();
+        double totalSalarios = list.stream().filter(c -> c.is_active).mapToDouble(c -> c.net_salary).sum();
+        
+        // Tabela de resumo
+        PdfPTable summaryTable = new PdfPTable(4);
+        summaryTable.setWidthPercentage(80);
+        summaryTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+        summaryTable.setSpacingBefore(10f);
+        
+        // Cabeçalho do resumo
+        Font summaryHeaderFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
+        PdfPCell headerCell = new PdfPCell(new Phrase("RESUMO EXECUTIVO", summaryHeaderFont));
+        headerCell.setColspan(4);
+        headerCell.setBackgroundColor(new Color(52, 73, 94));
+        headerCell.setPadding(8f);
+        headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        summaryTable.addCell(headerCell);
+        
+        // Dados do resumo
+        Font summaryFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
+        summaryTable.addCell(createSummaryCell("Total", String.valueOf(total), new Color(52, 152, 219)));
+        summaryTable.addCell(createSummaryCell("Ativos", String.valueOf(ativos), new Color(46, 204, 113)));
+        summaryTable.addCell(createSummaryCell("Inativos", String.valueOf(total - ativos), new Color(231, 76, 60)));
+        summaryTable.addCell(createSummaryCell("Folha Salarial", String.format("%.0f Kzs", totalSalarios), new Color(155, 89, 182)));
+        
+        pdf.add(summaryTable);
+    }
+    
+    private static PdfPCell createSummaryCell(String label, String value, Color color) {
+        Paragraph content = new Paragraph();
+        content.add(new Phrase(label + "\n", FontFactory.getFont(FontFactory.HELVETICA, 9, Color.GRAY)));
+        content.add(new Phrase(value, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, color)));
+        
+        PdfPCell cell = new PdfPCell(content);
+        cell.setPadding(8f);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBackgroundColor(new Color(248, 249, 250));
+        cell.setBorderColor(new Color(220, 221, 225));
         return cell;
     }
-    // Nova versão: célula com cor de texto, fundo, fonte customizada e borda
-    private static PdfPCell makeCell(String text, Color fg, Color bg, Font font) {
-        PdfPCell cell = new PdfPCell(new Phrase(text, font));
-        cell.setBackgroundColor(bg);
-        cell.setPadding(4);
-        cell.setBorderWidth(0.7f);
-        cell.setBorderColor(Color.GRAY);
-        return cell;
-    }
-
-    private static void addTableHeader(PdfPTable table, String... headers) {
-        // Deprecated: use addTableHeader with font
-        addTableHeader(table, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10), headers);
-    }
-
-    // Nova versão: cabeçalho com fonte customizada, borda e cor
-    private static void addTableHeader(PdfPTable table, Font font, String... headers) {
-        // Usa fonte negrito para o header
-        Font boldFont = FontFactory.getFont("Arial", "windows-1252", 10f, Font.BOLD);
-        if (boldFont == null) {
-            boldFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10f);
-        }
+    
+    private static void addElegantTableHeader(PdfPTable table, String... headers) {
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, Color.WHITE);
         for (String header : headers) {
-            PdfPCell cell = new PdfPCell(new Phrase(header, boldFont));
-            cell.setBackgroundColor(Color.LIGHT_GRAY);
-            cell.setPadding(5);
+            PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
+            cell.setBackgroundColor(new Color(52, 73, 94));
+            cell.setPadding(8f);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setBorderColor(new Color(44, 62, 80));
             cell.setBorderWidth(1f);
-            cell.setBorderColor(Color.DARK_GRAY);
             table.addCell(cell);
         }
+    }
+    
+    private static PdfPCell createStyledCell(String text, Color bg, Font font, int alignment) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setBackgroundColor(bg);
+        cell.setPadding(6f);
+        cell.setHorizontalAlignment(alignment);
+        cell.setBorderColor(new Color(220, 221, 225));
+        cell.setBorderWidth(0.5f);
+        return cell;
+    }
+    
+    private static PdfPCell createStatusCell(String status, Color bg, Color textColor) {
+        Font statusFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, textColor);
+        PdfPCell cell = new PdfPCell(new Phrase(status, statusFont));
+        cell.setBackgroundColor(bg);
+        cell.setPadding(6f);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setBorderColor(new Color(220, 221, 225));
+        cell.setBorderWidth(0.5f);
+        return cell;
+    }
+    
+    private static void createAnalysisSection(Document pdf, ArrayList<Collaborator> list) throws DocumentException {
+        pdf.add(Chunk.NEWLINE);
+        
+        // Título da análise
+        Paragraph analysisTitle = new Paragraph("ANÁLISE DETALHADA", 
+            FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14, new Color(52, 73, 94)));
+        analysisTitle.setAlignment(Element.ALIGN_CENTER);
+        analysisTitle.setSpacingAfter(10f);
+        pdf.add(analysisTitle);
+        
+        // Análise por função
+        if (!isptec.pii_pt2.grupo1.Function.functions_list.isEmpty()) {
+            pdf.add(new Paragraph("Distribuição por Função:", 
+                FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, new Color(52, 73, 94))));
+            
+            for (isptec.pii_pt2.grupo1.Function f : isptec.pii_pt2.grupo1.Function.functions_list) {
+                long count = list.stream()
+                    .filter(c -> c.function != null && c.function.id == f.id && c.is_active)
+                    .count();
+                if (count > 0) {
+                    pdf.add(new Paragraph("• " + f.name + ": " + count + " colaborador(es)", 
+                        FontFactory.getFont(FontFactory.HELVETICA, 11)));
+                }
+            }
+        }
+    }
+    
+    private static void createFooter(Document pdf) throws DocumentException {
+        pdf.add(Chunk.NEWLINE);
+        pdf.add(Chunk.NEWLINE);
+        
+        // Linha decorativa
+        pdf.add(createSeparatorLine());
+        pdf.add(Chunk.NEWLINE);
+        
+        // Assinatura elegante
+        Paragraph assinatura = new Paragraph(
+            "APROVADO POR:\n\n" +
+            "_________________________________\n" +
+            "Director de Recursos Humanos\n" +
+            "LJK, Corp.",
+            FontFactory.getFont(FontFactory.HELVETICA, 11, new Color(127, 140, 141)));
+        assinatura.setAlignment(Element.ALIGN_CENTER);
+        pdf.add(assinatura);
+        
+        pdf.add(Chunk.NEWLINE);
+        
+        // Rodapé com data de geração
+        Paragraph rodape = new Paragraph(
+            "Documento gerado automaticamente em " + formatCurrentDate(),
+            FontFactory.getFont(FontFactory.HELVETICA, 8, Color.GRAY));
+        rodape.setAlignment(Element.ALIGN_CENTER);
+        pdf.add(rodape);
+    }
+    
+    // Métodos utilitários
+    private static String formatDate(LocalDate date) {
+        if (date == null) return "N/A";
+        return date.getDayOfMonth() + "/" + date.getMonthValue() + "/" + date.getYear();
+    }
+    
+    private static String formatCurrentDate() {
+        LocalDate now = LocalDate.now();
+        return now.getDayOfMonth() + "/" + now.getMonthValue() + "/" + now.getYear();
+    }
+    
+    private static String truncateText(String text, int maxLength) {
+        if (text == null) return "N/A";
+        if (text.length() <= maxLength) return text;
+        return text.substring(0, maxLength - 3) + "...";
     }
 }
