@@ -250,33 +250,66 @@ public class Collaborator {
     }
     
     public static void print_collaborator(Collaborator item) {
-        String status = item.is_active ? "Ativo" : "Inativo";
-        System.out.println(String.format(
-            "| %-12s | %-20s | %-10s | %-15s | %-15s | %-25s | %-8s | %-7s | %-8s |",
+        String status = item.is_active ? ANSI_GREEN + "Ativo" + ANSI_RESET : ANSI_RED + "Inativo" + ANSI_RESET;
+        String salario = item.net_salary > 0 ? String.format("%.2f Kzs", item.net_salary) : "N/A";
+        
+        System.out.printf("│ %-8s │ %-18s │ %-10s │ %-12s │ %-15s │ %-9s │ %-6s │ %-10s │%n",
             item.Id,
-            item.name,
-            item.birthday != null ? item.birthday : "",
-            item.household,
-            item.function != null ? item.function.name : "",
-            item.email,
-            item.start_data != null ? item.start_data : "",
-            status,
-            item.worked_hours + "h"
-        ));
+            truncateString(item.name.toString(), 18),
+            item.birthday != null ? item.birthday.toString() : "N/A",
+            truncateString(item.function != null ? item.function.name.toString() : "N/A", 12),
+            truncateString(item.email.toString(), 15),
+            item.start_data != null ? item.start_data.toString() : "N/A",
+            item.worked_hours + "h",
+            salario
+        );
     }
 
     public static void list_collaborators(ArrayList<Collaborator> list) {
-        // Cabeçalho
-        System.out.println("-------------------------------------------------------------------------------------------------------------------------------");
-        System.out.println(String.format(
-            "| %-12s | %-20s | %-10s | %-15s | %-15s | %-25s | %-8s | %-7s | %-8s |",
-            "ID", "Nome", "Nascimento", "Morada", "Função", "Email", "Início", "Status", "Horas"));
-        System.out.println("-------------------------------------------------------------------------------------------------------------------------------");
-        for (Collaborator item : list) {
-            if (item.is_active)
-                print_collaborator(item);
+        if (list.isEmpty()) {
+            System.out.println(ANSI_RED + "\nNenhum colaborador cadastrado.\n" + ANSI_RESET);
+            return;
         }
-        System.out.println("-------------------------------------------------------------------------------------------------------------------------------");
+        
+        // Estatísticas rápidas
+        long ativos = list.stream().filter(c -> c.is_active).count();
+        long inativos = list.size() - ativos;
+        
+        System.out.println("\n╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                           LISTA DE COLABORADORES                                                ║");
+        System.out.println("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
+        System.out.printf("║ Total: %s%d%s colaboradores │ Ativos: %s%d%s │ Inativos: %s%d%s                                                    ║%n",
+                         ANSI_GREEN, list.size(), ANSI_RESET,
+                         ANSI_GREEN, ativos, ANSI_RESET,
+                         ANSI_RED, inativos, ANSI_RESET);
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+        
+        // Cabeçalho da tabela
+        System.out.println("┌──────────┬────────────────────┬────────────┬──────────────┬─────────────────┬───────────┬────────┬────────────┐");
+        System.out.printf("│ %-8s │ %-18s │ %-10s │ %-12s │ %-15s │ %-9s │ %-6s │ %-10s │%n",
+                         "ID", "Nome", "Nascimento", "Função", "Email", "Início", "Horas", "Salário");
+        System.out.println("├──────────┼────────────────────┼────────────┼──────────────┼─────────────────┼───────────┼────────┼────────────┤");
+        
+        // Dados dos colaboradores
+        for (Collaborator item : list) {
+            if (item.is_active) {
+                print_collaborator(item);
+            }
+        }
+        
+        System.out.println("└──────────┴────────────────────┴────────────┴──────────────┴─────────────────┴───────────┴────────┴────────────┘");
+        
+        // Mostrar inativos se existirem
+        if (inativos > 0) {
+            System.out.println("\n" + ANSI_RED + "COLABORADORES INATIVOS:" + ANSI_RESET);
+            System.out.println("┌──────────┬────────────────────┬────────────┬──────────────┬─────────────────┬───────────┬────────┬────────────┐");
+            for (Collaborator item : list) {
+                if (!item.is_active) {
+                    print_collaborator(item);
+                }
+            }
+            System.out.println("└──────────┴────────────────────┴────────────┴──────────────┴─────────────────┴───────────┴────────┴────────────┘");
+        }
     }
     public static int search_collaborator(ArrayList<Collaborator> list, String Id) {
         if (list == null || list.isEmpty())
@@ -312,9 +345,23 @@ public class Collaborator {
         int opc = 0;
         boolean updated = false;
         do {
+            System.out.println("\n╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
+            System.out.println("║                              ACTUALIZAR COLABORADOR                                ║");
+            System.out.println("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+            
+            // Mostrar dados atuais
+            System.out.println("\nDADOS ATUAIS:");
+            System.out.println("┌──────────┬────────────────────┬────────────┬──────────────┬─────────────────┬───────────┬────────┬────────────┐");
             print_collaborator(list.get(index));
-            System.out.println("0 - Sair");
-            System.out.println("Qual informação deseja actualizar ? : ");
+            System.out.println("└──────────┴────────────────────┴────────────┴──────────────┴─────────────────┴───────────┴────────┴────────────┘");
+            
+            System.out.println("\nOPÇÕES DE ACTUALIZAÇÃO:");
+            System.out.println("┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────┐");
+            System.out.println("│ [1] Nome          │ [2] Data Nascimento │ [3] Morada        │ [4] Função        │");
+            System.out.println("├───────────────────┼─────────────────────┼───────────────────┼───────────────────┤");
+            System.out.println("│ [5] Email         │ [6] Data Início     │ [7] Status        │ [0] Sair          │");
+            System.out.println("└───────────────────┴─────────────────────┴───────────────────┴───────────────────┘");
+            System.out.print("\nEscolha uma opção: ");
             opc = add_int();
 
             switch (opc) {
@@ -358,19 +405,23 @@ public class Collaborator {
                     updated = true;
                     break;
                 case 7:
+                    String statusAtual = list.get(index).is_active ? "Ativo" : "Inativo";
+                    String novoStatus = !list.get(index).is_active ? "Ativo" : "Inativo";
                     list.get(index).is_active = !list.get(index).is_active;
-                    System.out.println(ANSI_GREEN + "Status actualizado com sucesso !" + ANSI_RESET);
+                    System.out.println(ANSI_GREEN + "Status alterado de " + statusAtual + " para " + novoStatus + " com sucesso!" + ANSI_RESET);
                     updated = true;
                     break;
                 case 0:
+                    System.out.println("\n" + ANSI_GREEN + "Saindo da actualização..." + ANSI_RESET);
                     break;
                 default:
-                    System.out.println(ANSI_RED + "Digite uma Opção válida!" + ANSI_RESET);
+                    System.out.println("\n" + ANSI_RED + "Opção inválida! Escolha entre 0-7." + ANSI_RESET);
             }
         } while (opc != 0);
 
         if (updated) {
             save_all_collaborators_to_json_file(list, "files/collaborators.json");
+            System.out.println("\n" + ANSI_GREEN + "Todas as alterações foram salvas com sucesso!" + ANSI_RESET);
         }
     }
 
@@ -414,6 +465,13 @@ public class Collaborator {
         }
         System.out.println(ANSI_GREEN + "Salários Gerados com sucesso!" + ANSI_RESET);
     }
+    // Método auxiliar para truncar strings longas
+    private static String truncateString(String str, int maxLength) {
+        if (str == null) return "N/A";
+        if (str.length() <= maxLength) return str;
+        return str.substring(0, maxLength - 3) + "...";
+    }
+    
     // Remove método duplicado e problemático save_new_collaborator_to_json_file
     
 }   

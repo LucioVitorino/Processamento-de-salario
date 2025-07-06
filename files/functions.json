@@ -33,5 +33,19 @@
         "discount": 12,
         "salary": 12,
         "expected_hours": 12
+    },
+    {
+        "bonus": 12,
+        "name": "Jofd",
+        "discount": 12,
+        "salary": 12,
+        "expected_hours": 12
+    },
+    {
+        "bonus": 12,
+        "name": "Sds",
+        "discount": 12,
+        "salary": 12,
+        "expected_hours": 2
     }
 ]

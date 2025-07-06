@@ -19,6 +19,7 @@ import static isptec.pii_pt2.grupo1.Utils.ANSI_GREEN;
 import static isptec.pii_pt2.grupo1.Utils.ANSI_RED;
 import static isptec.pii_pt2.grupo1.Utils.ANSI_RESET;
 import static isptec.pii_pt2.grupo1.Utils.pause;
+import static isptec.pii_pt2.grupo1.Dashboard.showDashboard;
 import java.util.ArrayList;
 
 public class Menu {
@@ -35,6 +36,7 @@ public class Menu {
             System.out.println("4. Desativar Colaborador");
             System.out.println("5. Pesquisar Colaborador");
             System.out.println("6. Imprimir Colaboradores");
+            System.out.println("7. Dashboard de Colaboradores");
             System.out.println("0. Voltar ao Menu Principal");
             System.out.println("=====================================");
             System.out.print("Escolha uma opção: ");
@@ -94,6 +96,9 @@ public class Menu {
                         System.out.println();
                     }
                     pause();
+                    break;
+                case 7:
+                    showDashboard(list);
                     break;
                 case 0:
                     System.out.println("\nVoltando ao Menu Principal...\n");
@@ -188,6 +193,7 @@ public class Menu {
             System.out.println("2. Funções");
             System.out.println("3. Gerar Salário");
             System.out.println("4. Gerir Relatório");
+            System.out.println("5. Dashboard Executivo");
             System.out.println("0. Sair");
             System.out.println("================================");
             System.out.print("Escolha uma opção: ");
@@ -201,6 +207,9 @@ public class Menu {
                     break;
                 case 4:
                     menu_report(list);
+                    break;
+                case 5:
+                    showDashboard(list);
                     break;
                 case 3:
                     generate_salary(list);

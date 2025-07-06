@@ -115,34 +115,85 @@ public class Function {
     }
     public static void list_functions()
     {
-        System.out.println("Lista de Funções");
+        if (functions_list.isEmpty()) {
+            System.out.println(ANSI_RED + "Nenhuma função disponível." + ANSI_RESET);
+            return;
+        }
+        
+        System.out.println("\n┌─────────────── FUNÇÕES DISPONÍVEIS ───────────────┐");
         for (int i = 0; i < functions_list.size(); i++)
         {
-            System.out.println(functions_list.get(i).id + " - " + functions_list.get(i).name);
+            Function f = functions_list.get(i);
+            System.out.printf("│ %s[%d]%s %-25s (%.2f Kzs) │%n", 
+                            ANSI_GREEN, f.id, ANSI_RESET, 
+                            truncateString(f.name.toString(), 25), 
+                            f.salary);
         }
+        System.out.println("└────────────────────────────────────────────────────┘");
     }
     public static void print_list_of_functions() {
         if (functions_list.isEmpty()) {
-            System.out.println("Não existem funções cadastradas.");
+            System.out.println(ANSI_RED + "\nNão existem funções cadastradas.\n" + ANSI_RESET);
             return;
         }
-        System.out.println("--------------------------------------------------------------------------------------");
-        System.out.println(String.format(
-            "| %-4s | %-20s | %-10s | %-10s | %-10s | %-8s |",
-            "ID", "Nome", "Salário", "Bônus", "Colabs", "Horas"));
-        System.out.println("--------------------------------------------------------------------------------------");
+        
+        // Estatísticas rápidas
+        int totalFuncoes = functions_list.size();
+        int totalColaboradores = functions_list.stream().mapToInt(f -> f.colab_assigned).sum();
+        double salarioMedio = functions_list.stream().mapToDouble(f -> f.salary).average().orElse(0);
+        
+        System.out.println("\n╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                                              LISTA DE FUNÇÕES                                                ║");
+        System.out.println("╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════╣");
+        System.out.printf("║ Total de Funções: %s%d%s │ Colaboradores Atribuídos: %s%d%s │ Salário Médio: %s%.2f Kzs%s                      ║%n",
+                         ANSI_GREEN, totalFuncoes, ANSI_RESET,
+                         ANSI_GREEN, totalColaboradores, ANSI_RESET,
+                         ANSI_GREEN, salarioMedio, ANSI_RESET);
+        System.out.println("╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════╝");
+        
+        // Cabeçalho da tabela
+        System.out.println("┌──────┬──────────────────────┬─────────────┬─────────────┬─────────────┬──────────┬─────────────┬──────────────┐");
+        System.out.printf("│ %-4s │ %-20s │ %-11s │ %-11s │ %-11s │ %-8s │ %-11s │ %-12s │%n",
+                         "ID", "Nome", "Salário", "Bônus", "Desconto", "Colabs", "Horas Esp.", "Custo Total");
+        System.out.println("├──────┼──────────────────────┼─────────────┼─────────────┼─────────────┼──────────┼─────────────┼──────────────┤");
+        
+        // Dados das funções
         for (Function f : functions_list) {
-            System.out.println(String.format(
-                "| %-4d | %-20s | %-10.2f | %-10.2f | %-10d | %-8d |",
+            double custoTotal = (f.salary + f.bonus) * f.colab_assigned;
+            String nomeFormatado = truncateString(f.name.toString(), 20);
+            
+            System.out.printf("│ %-4d │ %-20s │ %s%9.2f Kzs%s │ %s%9.2f Kzs%s │ %s%9d Kzs%s │ %s%6d%s   │ %s%9d h%s │ %s%10.2f Kzs%s │%n",
                 f.id,
-                f.name,
-                f.salary,
-                f.bonus,
-                f.colab_assigned,
-                f.expected_hours
-            ));
+                nomeFormatado,
+                ANSI_GREEN, f.salary, ANSI_RESET,
+                ANSI_GREEN, f.bonus, ANSI_RESET,
+                ANSI_RED, f.absent_discount, ANSI_RESET,
+                f.colab_assigned > 0 ? ANSI_GREEN : ANSI_RED, f.colab_assigned, ANSI_RESET,
+                ANSI_GREEN, f.expected_hours, ANSI_RESET,
+                custoTotal > 0 ? ANSI_GREEN : "", custoTotal, custoTotal > 0 ? ANSI_RESET : ""
+            );
         }
-        System.out.println("--------------------------------------------------------------------------------------");
+        
+        System.out.println("└──────┴──────────────────────┴─────────────┴─────────────┴─────────────┴──────────┴─────────────┴──────────────┘");
+        
+        // Resumo financeiro
+        double custoTotalEmpresa = functions_list.stream()
+            .mapToDouble(f -> (f.salary + f.bonus) * f.colab_assigned)
+            .sum();
+        
+        System.out.println("\n┌─────────────────── RESUMO FINANCEIRO ───────────────────┐");
+        System.out.printf("│ Custo Total da Folha: %s%.2f Kzs%s                 │%n", 
+                         ANSI_GREEN, custoTotalEmpresa, ANSI_RESET);
+        System.out.printf("│ Custo Médio por Colaborador: %s%.2f Kzs%s          │%n", 
+                         ANSI_GREEN, totalColaboradores > 0 ? custoTotalEmpresa / totalColaboradores : 0, ANSI_RESET);
+        System.out.println("└──────────────────────────────────────────────────────────┘");
+    }
+    
+    // Método auxiliar para truncar strings longas
+    private static String truncateString(String str, int maxLength) {
+        if (str == null) return "N/A";
+        if (str.length() <= maxLength) return str;
+        return str.substring(0, maxLength - 3) + "...";
     }
     public static boolean function_exists(String name) {
         for (Function f : functions_list) {

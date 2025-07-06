@@ -1,10 +1,22 @@
-[{
-    "birthday": "2003-12-12",
-    "start_data": "2025-07-06",
-    "is_active": true,
-    "name": "Joferew",
-    "household": "23",
-    "function_id": 1,
-    "Id": "JO52001",
-    "email": "jofe@gmail.com"
-}]
+[
+    {
+        "birthday": "2003-12-12",
+        "start_data": "2025-07-06",
+        "is_active": true,
+        "name": "Joferew",
+        "household": "23",
+        "function_id": 1,
+        "Id": "JO52001",
+        "email": "jofe@gmail.com"
+    },
+    {
+        "birthday": "2000-12-12",
+        "start_data": "2025-07-06",
+        "is_active": true,
+        "name": "Jofe",
+        "household": "lua",
+        "function_id": 2,
+        "Id": "JO52002",
+        "email": "jso@gmail.com"
+    }
+]
