@@ -156,7 +156,7 @@ public class Menu {
         do{
             clearScreen();
             System.out.println("========= MENU RELATÓRIOS =========");
-            System.out.println("1. Gerar Relatório");
+            System.out.println("1. Gerar Relatório(PDF)");
             System.out.println("0. Voltar ao Menu Principal");
             System.out.println("===================================");
             System.out.print("Escolha uma opção: ");
@@ -188,7 +188,7 @@ public class Menu {
             System.out.println("1. Colaboradores");
             System.out.println("2. Funções");
             System.out.println("3. Gerar Salário");
-            System.out.println("4. Gerir Relatório");
+            System.out.println("4. Gerar Relatório");
             System.out.println("5. Dashboard Executivo");
             System.out.println("0. Sair");
             System.out.println("================================");
